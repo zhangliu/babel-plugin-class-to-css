@@ -50,7 +50,7 @@ const addDangerouslySetInnerHTML = (t, path, style) => {
     if (dangerousAttr) element.attributes = element.attributes.filter(attr => attr !== dangerousAttr)
   
     // 加入新的 dangerouslySetInnerHTML
-    const styleSet = [...(new Set(style))].join(';') // Set 用于去重
+    const styleSet = [...(new Set(style))].join('') // Set 用于去重
 
     const _html = t.ObjectProperty(t.Identifier('_html'), t.StringLiteral(styleSet))
     const value = t.JSXExpressionContainer(t.objectExpression([_html]))
@@ -78,12 +78,8 @@ const genCsses = (rules, names) => {
   for (const name of names) {
     const rule = rules.find(r => r.reg.test(name))
     if (!rule) continue
-    const css = name.replace(rule.reg, rule.to).trim().replace(';', '')
-    result.push(css) 
+    const css = name.replace(rule.reg, rule.to).trim()
+    result.push(`.${name}{${css}}`) 
   }
   return result
-}
-
-const unshiftToView = css => {
-
 }
