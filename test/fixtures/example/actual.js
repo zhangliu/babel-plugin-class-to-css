@@ -15,10 +15,10 @@ class T extends React.Component {
      return (
       <div id='1' className='fs12 pa m20'>
         <style dangerouslySetInnerHTML={{ __html: Style }} />
-        <style className="babel-style" dangerouslySetInnerHTML={{ __html: {} }} />
-        <span id='2'>
+        <span id='2' className="fs14 pa m30">
           {this.getPeople()}
         </span>
+        <style className="babel-style" />
       </div>
      )
     }
