@@ -19,5 +19,9 @@
   },
   "keywords": [
     "babel-plugin"
-  ]
+  ],
+  "dependencies": {
+    "babel-preset-react": "^6.24.1",
+    "react": "^16.8.6"
+  }
 }
