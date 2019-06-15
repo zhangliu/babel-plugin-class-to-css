@@ -22,13 +22,13 @@ import React from 'react'
 export default () => (
   <div className="fs12 mt10 pa t0">
     <span className="p20">hello world!</span>
-    <style dangerouslySetInnerHTML={{_html: {
+    <style dangerouslySetInnerHTML={{_html: `
     .fs12{font-size: 12px}
     .mt10{margin-top: 10px}
     .pa{position: absolute}
     .t0{top: 0px}
     .p20{padding: 20px}
-    }}}/>
+    `}}/>
   </div>
 )
 ```
