@@ -5,9 +5,9 @@ const styles = {}
 export default function({types: t }) {
   return {
     visitor: {
-      JSXElement(path, { file, opts: { styleClassName = 'babel-style' } }) {
+      JSXOpeningElement(path, { file, opts: { styleClassName = 'babel-style' } }) {
         try {
-          if (path.node.openingElement.name.name !== 'style') return
+          if (path.node.name.name !== 'style') return
           if (!isTargetStyle(path, styleClassName)) return
           
           const filename = file.opts.filename
@@ -16,6 +16,15 @@ export default function({types: t }) {
           console.log(e)
         }
       },
+
+      // JSXClosingElement(path) {
+      //   try {
+      //     if (path.parentPath.parentPath.node.type !== 'ReturnStatement') return
+      //     // add style tag
+      //   } catch (e) {
+      //     console.log(e)
+      //   }
+      // },
 
       JSXAttribute(path, { file, opts: { rules = [], unit = 'px' } }) {
         const names = getClassNames(path)
@@ -32,7 +41,7 @@ export default function({types: t }) {
 
 const isTargetStyle = (path, className) => {
   try {
-    const attrs = path.node.openingElement.attributes
+    const attrs = path.node.attributes
     const attr = attrs.find(attr => attr.name.name === 'className')
     if (!attr) return false
     if (attr.value.value === className) return true;
@@ -45,9 +54,10 @@ const isTargetStyle = (path, className) => {
 const addDangerouslySetInnerHTML = (t, path, style) => {
   try {
     // 先删除可能有的 dangerouslySetInnerHTML
-    const element = path.node.openingElement
-    let dangerousAttr = element.attributes.find(attr => attr.name.name === 'dangerouslySetInnerHTML')
-    if (dangerousAttr) element.attributes = element.attributes.filter(attr => attr !== dangerousAttr)
+    const node = path.node
+    let attrs = node.attributes
+    let dangerousAttr = attrs.find(attr => attr.name.name === 'dangerouslySetInnerHTML')
+    if (dangerousAttr) attrs = node.attributes = attrs.filter(attr => attr !== dangerousAttr)
   
     // 加入新的 dangerouslySetInnerHTML
     const styleSet = [...(new Set(style))].join('') // Set 用于去重
@@ -55,7 +65,7 @@ const addDangerouslySetInnerHTML = (t, path, style) => {
     const _html = t.ObjectProperty(t.Identifier('_html'), t.StringLiteral(styleSet))
     const value = t.JSXExpressionContainer(t.objectExpression([_html]))
     dangerousAttr = t.jSXAttribute(t.JSXIdentifier('dangerouslySetInnerHTML'), value)
-    element.attributes.push(dangerousAttr)
+    attrs.push(dangerousAttr)
   } catch (e) {
     console.log(e)
   }
