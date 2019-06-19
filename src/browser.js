@@ -1,14 +1,70 @@
 (function () {
   var genRules = function(unit = 'px') {
     return [
+      //display
+      { reg: /^db($|_.*)/, to: 'display: block' },
+      { reg: /^dib($|_.*)/, to: 'display: inline-block' },
+      { reg: /^dn($|_.*)/, to: 'display: none' },
+
       // margin
-      { reg: /^m(\d+).*/, to: 'margin: $1' + unit },
+      { reg: /^m(\d+)($|_.*)/, to: 'margin: $1' + unit },
+      { reg: /^mt(\d+)($|_.*)/, to: 'margin-top: $1' + unit },
+      { reg: /^mb(\d+)($|_.*)/, to: 'margin-bottom: $1' + unit },
+      { reg: /^ml(\d+)($|_.*)/, to: 'margin-left: $1' + unit },
+      { reg: /^mr(\d+)($|_.*)/, to: 'margin-right: $1' + unit },
+
+      { reg: /^mra($|_.*)/, to: 'margin-right: auto' },
+      { reg: /^mla($|_.*)/, to: 'margin-left: auto' },
+
+      // padding
+      { reg: /^p(\d+)($|_.*)/, to: 'padding: $1' + unit },
+      { reg: /^pt(\d+)($|_.*)/, to: 'padding-top: $1' + unit },
+      { reg: /^pb(\d+)($|_.*)/, to: 'padding-bottop: $1' + unit },
+      { reg: /^pl(\d+)($|_.*)/, to: 'padding-left: $1' + unit },
+      { reg: /^pr(\d+)($|_.*)/, to: 'padding-right: $1' + unit },
+
+      { reg: /^pra($|_.*)/, to: 'padding-right: auto' },
+      { reg: /^pla($|_.*)/, to: 'padding-left: auto' },
+
+      // float
+      { reg: /^fl($|_.*)/, to: 'float: left' },
+      { reg: /^fr($|_.*)/, to: 'float: right' },
+      { reg: /^ofh($|_.*)/, to: 'overflow: hidden' },
+      { reg: /^ofa($|_.*)/, to: 'overflow: auto' },
+      { reg: /^cb($|_.*)/, to: 'clear: both' },
+
+      //text-align
+      { reg: /^tal($|_.*)/, to: 'text-align: left' },
+      { reg: /^tar($|_.*)/, to: 'text-align: right' },
+      { reg: /^tac($|_.*)/, to: 'text-align: center' },
 
       // font
-      { reg: /^fs(\d+)$/, to: 'font-size: $1' + unit },
+      { reg: /^lh(\d+)($|_.*)/, to: 'line-height: $1' + unit },
+      { reg: /^fwb($|_.*)/, to: 'font-weight:bold' },
+      { reg: /^fs(\d+)($|_.*)/, to: 'font-size: $1' + unit },
+      { reg: /^c([0-9a-f]{3,6})($|_.*)/, to: 'color: #$1' },
+      { reg: /^tdn($|_.*)/, to: 'text-decoration: none' },
+      { reg: /^tdu($|_.*)/, to: 'text-decoration: underline' },
 
       // position
-      { reg: /^pa$/, to: 'position: absolute' },
+      { reg: /^pa($|_.*)/, to: 'position: absolute' },
+      { reg: /^pf($|_.*)/, to: 'position: fixed' },
+
+      //width and height
+      { reg: /^w(\d+)($|_.*)/, to: 'width: $1' + unit },
+      { reg: /^miw(\d+)($|_.*)/, to: 'min-width: $1' + unit },
+      { reg: /^h(\d+)($|_.*)/, to: 'height: $1' + unit },
+      { reg: /^mih(\d+)($|_.*)/, to: 'min-height: $1' + unit },
+
+      // border
+      { reg: /^bw(\d+)($|_.*)/, to: 'border-width: $1' + unit },
+      { reg: /^bbw(\d+)($|_.*)/, to: 'border-bottom-width: $1' + unit },
+      { reg: /^blw(\d+)($|_.*)/, to: 'border-left-width: $1' + unit },
+      { reg: /^brw(\d+)($|_.*)/, to: 'border-right-width: $1' + unit },
+      { reg: /^btw(\d+)($|_.*)/, to: 'border-top-width: $1' + unit },
+      { reg: /^bss($|_.*)/, to: 'border-style: solid' },
+      { reg: /^bsd($|_.*)/, to: 'border-style: dashed' },
+      { reg: /^bc(\w{3,6})($|_.*)/, to: 'border-color: #$1' },
     ]
   }
 
@@ -61,80 +117,3 @@
   }
   window.__sm_css = run
 })()
-
-/*
-
-  var css_config = {};
-  
-  //a
-  css_config['^ap([\\d]+)'] = '-moz-opacity:0.$1;-khtml-opacity: 0.$1;opacity: 0.$1';
-  css_config['^ap([\\d]+)_e'] = 'filter:alpha(opacity=$1)';
-  //b
-  css_config['^bw([\\d-]+)'] = 'border-width:$1px';
-  css_config['^bwb([\\d-]+)'] = 'border-bottom-width:$1px';
-  css_config['^bwl([\\d-]+)'] = 'border-left-width:$1px';
-  css_config['^bwr([\\d-]+)'] = 'border-right-width:$1px';
-  css_config['^bwt([\\d-]+)'] = 'border-top-width:$1px';
-  css_config['^bc(\\w{3,6})'] = 'border-color:#$1';
-  css_config['^bss'] = 'border-style:solid';
-  css_config['^bsd'] = 'border-style:dashed';
-  
-  // css_config['^bgi(\\w+)'] = 'background-image:url('+config.img_dir+'/$1.gif)';
-  // css_config['^bgi(\\w+)_n'] = 'background:url('+config.img_dir+'/$1.gif) no-repeat';
-  css_config['^bgc([0-9a-f]{3,6})'] = 'background-color:#$1';
-  css_config['^bgn'] = 'background:none';
-  //c
-  css_config['^cb'] = 'clear:both';
-  css_config['^cp'] = 'cursor:pointer';
-  
-  //display
-  css_config['^db$'] = 'display:block';
-  css_config['^dib$'] = 'display:inline-block';
-  css_config['^dn$'] = 'display:none';
-  //line
-  css_config['^lh([\\d-]+)'] = 'line-height:$1px';
-  //margin
-  css_config['^m([\\d-]+)'] = 'margin:$1px';
-  css_config['^mt([\\d-]+)'] = 'margin-top:$1px';
-  css_config['^mb([\\d-]+)'] = 'margin-bottom:$1px';
-  css_config['^mr([\\d-]+)'] = 'margin-right:$1px';
-  css_config['^mra'] = 'margin-right:auto';
-  css_config['^ml([\\d-]+)'] = 'margin-left:$1px';
-  css_config['^mla'] = 'margin-left:auto';
-  //float
-  css_config['^fl'] = 'float:left';
-  css_config['^fr'] = 'float:right';
-  css_config['^ofh'] = 'overflow:hidden';
-  css_config['^ofa'] = 'overflow:auto';
-  
-  //font
-  css_config['^fwb'] = 'font-weight:bold';
-  css_config['^fs(\\d+)'] = 'font-size:$1px';
-  css_config['^c([0-9a-f]{3,6})'] = 'color:#$1';
-  css_config['^tdn'] = 'text-decoration:none';
-  css_config['^tdu'] = 'text-decoration:underline';
-  css_config['^ffm'] = 'font-family: Microsoft Yahei';
-  //padding
-  css_config['^p([\\d-]+)'] = 'padding:$1px';
-  css_config['^pt([\\d-]+)'] = 'padding-top:$1px';
-  css_config['^pr([\\d-]+)'] = 'padding-right:$1px';
-  css_config['^pb([\\d-]+)'] = 'padding-bottom:$1px';
-  css_config['^pl([\\d-]+)'] = 'padding-left:$1px';
-  css_config['^pra'] = 'padding-right:auto';
-  css_config['^pla'] = 'padding-left:auto';
-  
-  css_config['^pf'] = 'position:fixed';
-  
-  //text-align
-  css_config['^tal'] = 'text-align:left';
-  css_config['^tar'] = 'text-align:right';
-  css_config['^tac'] = 'text-align:center';
-  //width and height
-  css_config['^h([\\d-]+)'] = 'height:$1px';
-  css_config['^h([\\d-]+)b'] = 'height:$1%';
-  css_config['^w([\\d-]+)'] = 'width:$1px';
-  css_config['^w([\\d-]+)b'] = 'width:$1%';
-  css_config['^miw([\\d-]+)'] = 'min-width:$1px';
-  //ul
-  css_config['^lstn'] = 'list-style-type:none';
-*/
