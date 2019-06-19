@@ -1,5 +1,5 @@
 (function () {
-  var genRules = (unit = 'px') => {
+  var genRules = function(unit = 'px') {
     return [
       // margin
       { reg: /^m(\d+).*/, to: 'margin: $1' + unit },
@@ -12,24 +12,20 @@
     ]
   }
 
-  var sm_css = function(config) {
-    config = config || {};
-    var rules = genRules()
-    var htmlStr = config.html || (config.node || document.body).outerHTML;
+  var rules = genRules();
+  var classNameReg = /\s+class=['\"](.*?)['\"]/ig;
 
-    var classNameReg = /\s+class=['\"](.*?)['\"]/ig
-    var classNames = htmlStr.match(classNameReg) || [];
+  var doTask = function(classNames) {
     var cssArr = [];
-
-    // 这块逻辑需要做分时处理
     for (var className of classNames){
-        var classArr = className.replace(classNameReg, '$1').split(' ').filter(s => s.length);
-        for(var name of classArr){
-            if (cssArr[name]) continue
-            var rule = rules.find(r => r.reg.test(name))
-            if (!rule) continue
-            cssArr[name] = name.replace(rule.reg, rule.to);
-        }
+      var classArr = className.replace(classNameReg, '$1').split(' ').filter(s => s.length);
+      for(var name of classArr){
+          if (cssArr[name]) continue
+          var rule = rules.find(r => r.reg.test(name))
+          if (!rule) continue
+          cssArr[name] = name.replace(rule.reg, rule.to);
+          console.log('see:', name, rule, cssArr[name])
+      }
     }
 
     //创建style
@@ -45,9 +41,25 @@
         styleNod.styleSheet.cssText = cssStr;  
     } else styleNod.innerHTML = cssStr;
 
-    document.getElementsByTagName('head')[0].appendChild(styleNod);   
+    document.getElementsByTagName('head')[0].appendChild(styleNod); 
   }
-  window.__sm_css = sm_css
+
+  var run = function(config) {
+    config = config || {};
+    var htmlStr = config.html || (config.node || document.body).outerHTML;
+    var taskStep = config.taskStep || 5
+    var classNames = htmlStr.match(classNameReg) || [];
+
+    // 这块逻辑需要做分时处理
+    var start = 0
+    while(true) {
+      var data = classNames.slice(start, start + taskStep);
+      if (data.length <= 0) break;
+      setTimeout(doTask.bind(null, data), 50)
+      start = start + taskStep
+    }
+  }
+  window.__sm_css = run
 })()
 
 /*
