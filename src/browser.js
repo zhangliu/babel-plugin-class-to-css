@@ -52,6 +52,7 @@
 
       // position
       { reg: /^pa($|_.*)/, to: 'position: absolute' },
+      { reg: /^pr($|_.*)/, to: 'position: relative' },
       { reg: /^pf($|_.*)/, to: 'position: fixed' },
 
       //width and height
