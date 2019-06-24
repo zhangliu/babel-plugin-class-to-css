@@ -42,7 +42,7 @@
       { reg: /^lh(\d+)($|_.*)/, to: 'line-height: $1' + unit },
       { reg: /^fwb($|_.*)/, to: 'font-weight:bold' },
       { reg: /^fs(\d+)($|_.*)/, to: 'font-size: $1' + unit },
-      { reg: /^c(\w{3,6})($|_.*)/, to: 'color: #$1' },
+      { reg: /^c([0-9a-fA-F]{3,6})($|_.*)/, to: 'color: #$1' },
       { reg: /^tdn($|_.*)/, to: 'text-decoration: none' },
       { reg: /^tdu($|_.*)/, to: 'text-decoration: underline' },
 
