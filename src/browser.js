@@ -54,7 +54,7 @@
       { reg: /^pa($|_.*)/, to: 'position: absolute' },
       { reg: /^pr($|_.*)/, to: 'position: relative' },
       { reg: /^pf($|_.*)/, to: 'position: fixed' },
-      { reg: /^t(\d+%)($|_.*)/, to: 'top: $1' },
+      { reg: /^t(\d+b)($|_.*)/, to: 'top: $1%' },
       { reg: /^t(\d+)($|_.*)/, to: 'top: $1' + unit },
       { reg: /^b(\d+)($|_.*)/, to: 'bottom: $1' + unit },
       { reg: /^l(\d+)($|_.*)/, to: 'left: $1' + unit },
