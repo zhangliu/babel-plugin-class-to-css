@@ -19,7 +19,7 @@
       // padding
       { reg: /^p(-?\d+)($|_.*)/, to: 'padding: $1' + unit },
       { reg: /^pt(-?\d+)($|_.*)/, to: 'padding-top: $1' + unit },
-      { reg: /^pb(-?\d+)($|_.*)/, to: 'padding-bottop: $1' + unit },
+      { reg: /^pb(-?\d+)($|_.*)/, to: 'padding-bottom: $1' + unit },
       { reg: /^pl(-?\d+)($|_.*)/, to: 'padding-left: $1' + unit },
       { reg: /^pr(-?\d+)($|_.*)/, to: 'padding-right: $1' + unit },
 
