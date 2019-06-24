@@ -7,21 +7,21 @@
       { reg: /^dn($|_.*)/, to: 'display: none' },
 
       // margin
-      { reg: /^m(\d+)($|_.*)/, to: 'margin: $1' + unit },
-      { reg: /^mt(\d+)($|_.*)/, to: 'margin-top: $1' + unit },
-      { reg: /^mb(\d+)($|_.*)/, to: 'margin-bottom: $1' + unit },
-      { reg: /^ml(\d+)($|_.*)/, to: 'margin-left: $1' + unit },
-      { reg: /^mr(\d+)($|_.*)/, to: 'margin-right: $1' + unit },
+      { reg: /^m(-?\d+)($|_.*)/, to: 'margin: $1' + unit },
+      { reg: /^mt(-?\d+)($|_.*)/, to: 'margin-top: $1' + unit },
+      { reg: /^mb(-?\d+)($|_.*)/, to: 'margin-bottom: $1' + unit },
+      { reg: /^ml(-?\d+)($|_.*)/, to: 'margin-left: $1' + unit },
+      { reg: /^mr(-?\d+)($|_.*)/, to: 'margin-right: $1' + unit },
 
       { reg: /^mra($|_.*)/, to: 'margin-right: auto' },
       { reg: /^mla($|_.*)/, to: 'margin-left: auto' },
 
       // padding
-      { reg: /^p(\d+)($|_.*)/, to: 'padding: $1' + unit },
-      { reg: /^pt(\d+)($|_.*)/, to: 'padding-top: $1' + unit },
-      { reg: /^pb(\d+)($|_.*)/, to: 'padding-bottop: $1' + unit },
-      { reg: /^pl(\d+)($|_.*)/, to: 'padding-left: $1' + unit },
-      { reg: /^pr(\d+)($|_.*)/, to: 'padding-right: $1' + unit },
+      { reg: /^p(-?\d+)($|_.*)/, to: 'padding: $1' + unit },
+      { reg: /^pt(-?\d+)($|_.*)/, to: 'padding-top: $1' + unit },
+      { reg: /^pb(-?\d+)($|_.*)/, to: 'padding-bottop: $1' + unit },
+      { reg: /^pl(-?\d+)($|_.*)/, to: 'padding-left: $1' + unit },
+      { reg: /^pr(-?\d+)($|_.*)/, to: 'padding-right: $1' + unit },
 
       { reg: /^pra($|_.*)/, to: 'padding-right: auto' },
       { reg: /^pla($|_.*)/, to: 'padding-left: auto' },
@@ -39,9 +39,9 @@
       { reg: /^tac($|_.*)/, to: 'text-align: center' },
 
       // font
-      { reg: /^lh(\d+)($|_.*)/, to: 'line-height: $1' + unit },
+      { reg: /^lh(-?\d+)($|_.*)/, to: 'line-height: $1' + unit },
       { reg: /^fwb($|_.*)/, to: 'font-weight:bold' },
-      { reg: /^fs(\d+)($|_.*)/, to: 'font-size: $1' + unit },
+      { reg: /^fs(-?\d+)($|_.*)/, to: 'font-size: $1' + unit },
       { reg: /^c([0-9a-fA-F]{3,6})($|_.*)/, to: 'color: #$1' },
       { reg: /^tdn($|_.*)/, to: 'text-decoration: none' },
       { reg: /^tdu($|_.*)/, to: 'text-decoration: underline' },
@@ -51,17 +51,17 @@
       { reg: /^pf($|_.*)/, to: 'position: fixed' },
 
       //width and height
-      { reg: /^w(\d+)($|_.*)/, to: 'width: $1' + unit },
-      { reg: /^miw(\d+)($|_.*)/, to: 'min-width: $1' + unit },
-      { reg: /^h(\d+)($|_.*)/, to: 'height: $1' + unit },
-      { reg: /^mih(\d+)($|_.*)/, to: 'min-height: $1' + unit },
+      { reg: /^w(-?\d+)($|_.*)/, to: 'width: $1' + unit },
+      { reg: /^miw(-?\d+)($|_.*)/, to: 'min-width: $1' + unit },
+      { reg: /^h(-?\d+)($|_.*)/, to: 'height: $1' + unit },
+      { reg: /^mih(-?\d+)($|_.*)/, to: 'min-height: $1' + unit },
 
       // border
-      { reg: /^bw(\d+)($|_.*)/, to: 'border-width: $1' + unit },
-      { reg: /^bbw(\d+)($|_.*)/, to: 'border-bottom-width: $1' + unit },
-      { reg: /^blw(\d+)($|_.*)/, to: 'border-left-width: $1' + unit },
-      { reg: /^brw(\d+)($|_.*)/, to: 'border-right-width: $1' + unit },
-      { reg: /^btw(\d+)($|_.*)/, to: 'border-top-width: $1' + unit },
+      { reg: /^bw(-?\d+)($|_.*)/, to: 'border-width: $1' + unit },
+      { reg: /^bbw(-?\d+)($|_.*)/, to: 'border-bottom-width: $1' + unit },
+      { reg: /^blw(-?\d+)($|_.*)/, to: 'border-left-width: $1' + unit },
+      { reg: /^brw(-?\d+)($|_.*)/, to: 'border-right-width: $1' + unit },
+      { reg: /^btw(-?\d+)($|_.*)/, to: 'border-top-width: $1' + unit },
       { reg: /^bss($|_.*)/, to: 'border-style: solid' },
       { reg: /^bsd($|_.*)/, to: 'border-style: dashed' },
       { reg: /^bc(\w{3,6})($|_.*)/, to: 'border-color: #$1' },
