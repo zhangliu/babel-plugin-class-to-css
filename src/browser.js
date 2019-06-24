@@ -38,10 +38,13 @@
       { reg: /^tar($|_.*)/, to: 'text-align: right' },
       { reg: /^tac($|_.*)/, to: 'text-align: center' },
 
+      // background
+      { reg: /^bgc([0-9a-fA-F]{3,6})($|_.*)/, to: 'background-color: #$1' },
+
       // font
-      { reg: /^lh(-?\d+)($|_.*)/, to: 'line-height: $1' + unit },
+      { reg: /^lh(\d+)($|_.*)/, to: 'line-height: $1' + unit },
       { reg: /^fwb($|_.*)/, to: 'font-weight:bold' },
-      { reg: /^fs(-?\d+)($|_.*)/, to: 'font-size: $1' + unit },
+      { reg: /^fs(\d+)($|_.*)/, to: 'font-size: $1' + unit },
       { reg: /^c([0-9a-fA-F]{3,6})($|_.*)/, to: 'color: #$1' },
       { reg: /^tdn($|_.*)/, to: 'text-decoration: none' },
       { reg: /^tdu($|_.*)/, to: 'text-decoration: underline' },
@@ -51,20 +54,25 @@
       { reg: /^pf($|_.*)/, to: 'position: fixed' },
 
       //width and height
-      { reg: /^w(-?\d+)($|_.*)/, to: 'width: $1' + unit },
-      { reg: /^miw(-?\d+)($|_.*)/, to: 'min-width: $1' + unit },
-      { reg: /^h(-?\d+)($|_.*)/, to: 'height: $1' + unit },
-      { reg: /^mih(-?\d+)($|_.*)/, to: 'min-height: $1' + unit },
+      { reg: /^w(\d+)($|_.*)/, to: 'width: $1' + unit },
+      { reg: /^miw(\d+)($|_.*)/, to: 'min-width: $1' + unit },
+      { reg: /^h(\d+)($|_.*)/, to: 'height: $1' + unit },
+      { reg: /^mih(\d+)($|_.*)/, to: 'min-height: $1' + unit },
 
       // border
-      { reg: /^bw(-?\d+)($|_.*)/, to: 'border-width: $1' + unit },
-      { reg: /^bbw(-?\d+)($|_.*)/, to: 'border-bottom-width: $1' + unit },
-      { reg: /^blw(-?\d+)($|_.*)/, to: 'border-left-width: $1' + unit },
-      { reg: /^brw(-?\d+)($|_.*)/, to: 'border-right-width: $1' + unit },
-      { reg: /^btw(-?\d+)($|_.*)/, to: 'border-top-width: $1' + unit },
+      { reg: /^bw(\d+)($|_.*)/, to: 'border-width: $1' + unit },
+      { reg: /^bbw(\d+)($|_.*)/, to: 'border-bottom-width: $1' + unit },
+      { reg: /^blw(\d+)($|_.*)/, to: 'border-left-width: $1' + unit },
+      { reg: /^brw(\d+)($|_.*)/, to: 'border-right-width: $1' + unit },
+      { reg: /^btw(\d+)($|_.*)/, to: 'border-top-width: $1' + unit },
       { reg: /^bss($|_.*)/, to: 'border-style: solid' },
       { reg: /^bsd($|_.*)/, to: 'border-style: dashed' },
       { reg: /^bc(\w{3,6})($|_.*)/, to: 'border-color: #$1' },
+      { reg: /^br(\d+)($|_.*)/, to: 'border-radius: $1' + unit },
+      { reg: /^btlr(\d+)($|_.*)/, to: 'border-top-left-radius: $1' + unit },
+      { reg: /^btrr(\d+)($|_.*)/, to: 'border-top-right-radius: $1' + unit },
+      { reg: /^bbrr(\d+)($|_.*)/, to: 'border-bottom-right-radius: $1' + unit },
+      { reg: /^bblr(\d+)($|_.*)/, to: 'border-bottom-left-radius: $1' + unit },
     ]
   }
 
