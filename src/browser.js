@@ -39,6 +39,7 @@
       { reg: /^tac($|_.*)/, to: 'text-align: center' },
 
       // background
+      { reg: /^bgn($|_.*)/, to: 'background: none' },
       { reg: /^bgc([0-9a-fA-F]{3,6})($|_.*)/, to: 'background-color: #$1' },
 
       // font
