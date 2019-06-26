@@ -88,27 +88,28 @@
   var classNameReg = /\s+class=['\"](.*?)['\"]/ig;
 
   var doTask = function(classNames) {
-    var cssArr = [];
+    var cssesObj = [];
     for (var className of classNames){
       var classArr = className.replace(classNameReg, '$1').split(' ').filter(s => s.length);
       for(var name of classArr){
-          if (cssArr[name]) continue
+          if (cssesObj[name]) continue
           var rule = rules.find(r => r.reg.test(name))
           if (!rule) continue
-          cssArr[name] = name.replace(rule.reg, rule.to);
-          console.log('see:', name, rule, cssArr[name])
+          cssesObj[name] = name.replace(rule.reg, rule.to);
+          console.log('see:', name, rule, cssesObj[name])
       }
     }
-    debugger
-    if (Object.keys(cssArr).length <= 0) return
+
     //创建style
     var styleNod = document.createElement('style');
     styleNod.type = 'text/css';
-    var cssStr = Object.keys(cssArr).map(key => {
-        if (/_i(_|$)/.test(key)) return '.' + key + '{' + cssArr[key] + ' !important}';
-        if (/_h(_|$)/.test(key)) return  '.' + key + ':hover{' + cssArr[key] + '}';
-        return '.' + key + '{' + cssArr[key] + '}'
+    var cssStr = Object.keys(cssesObj).map(key => {
+        if (/_i(_|$)/.test(key)) return '.' + key + '{' + cssesObj[key] + ' !important}';
+        if (/_h(_|$)/.test(key)) return  '.' + key + ':hover{' + cssesObj[key] + '}';
+        return '.' + key + '{' + cssesObj[key] + '}'
     }).join('');
+
+    if (!cssStr) return
 
     if(styleNod.styleSheet){
         styleNod.styleSheet.cssText = cssStr;  
