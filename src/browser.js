@@ -121,7 +121,7 @@
   var run = function(config) {
     config = config || {};
     var htmlStr = config.html || (config.node || document.body).outerHTML;
-    var taskStep = config.taskStep || 50
+    var taskStep = config.taskStep || 5000
     var classNames = htmlStr.match(classNameReg) || [];
 
     // 这块逻辑需要做分时处理
