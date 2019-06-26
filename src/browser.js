@@ -113,7 +113,10 @@
         styleNod.styleSheet.cssText = cssStr;  
     } else styleNod.innerHTML = cssStr;
 
-    document.getElementsByTagName('head')[0].appendChild(styleNod); 
+    var head = document.getElementsByTagName('head')[0]
+    if (!head) return
+    if (head.firstChild) return head.insertBefore(styleNod, head.firstChild)
+    head.appendChild(styleNod); 
   }
 
   var run = function(config) {
