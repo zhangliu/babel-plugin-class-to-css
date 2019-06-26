@@ -99,6 +99,7 @@
           console.log('see:', name, rule, cssArr[name])
       }
     }
+    debugger
     if (Object.keys(cssArr).length <= 0) return
     //创建style
     var styleNod = document.createElement('style');
@@ -113,16 +114,13 @@
         styleNod.styleSheet.cssText = cssStr;  
     } else styleNod.innerHTML = cssStr;
 
-    var head = document.getElementsByTagName('head')[0]
-    if (!head) return
-    if (head.firstChild) return head.insertBefore(styleNod, head.firstChild)
-    head.appendChild(styleNod); 
+    document.getElementsByTagName('head')[0].appendChild(styleNod); 
   }
 
   var run = function(config) {
     config = config || {};
     var htmlStr = config.html || (config.node || document.body).outerHTML;
-    var taskStep = config.taskStep || 5
+    var taskStep = config.taskStep || 50
     var classNames = htmlStr.match(classNameReg) || [];
 
     // 这块逻辑需要做分时处理
