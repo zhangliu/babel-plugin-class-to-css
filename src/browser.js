@@ -99,7 +99,7 @@
           console.log('see:', name, rule, cssArr[name])
       }
     }
-
+    if (cssArr.length <= 0) return
     //创建style
     var styleNod = document.createElement('style');
     styleNod.type = 'text/css';
