@@ -62,6 +62,7 @@
 
       //width and height
       { reg: /^w(\d+)($|_.*)/, to: 'width: $1' + unit },
+      { reg: /^w(\d+)b($|_.*)/, to: 'width: $1%' },
       { reg: /^miw(\d+)($|_.*)/, to: 'min-width: $1' + unit },
       { reg: /^h(\d+)($|_.*)/, to: 'height: $1' + unit },
       { reg: /^mih(\d+)($|_.*)/, to: 'min-height: $1' + unit },
