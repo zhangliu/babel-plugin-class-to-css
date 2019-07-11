@@ -1,9 +1,5 @@
 import React, {Fragment} from 'react'
 
-React.createElement(List, {
-  className: "list m60 pa"
-}, React.createElement('style', {className: 'babel-style'}))
-
 // class T extends React.Component {
 
 //   // getPeople() {
@@ -29,3 +25,7 @@ React.createElement(List, {
 //      )
 //     }
 // }
+
+React.createElement(List, {
+  className: "list m60 pa_i_h"
+}, React.createElement('style', {className: 'babel-style'}))

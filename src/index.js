@@ -149,11 +149,16 @@ const getJSXClassNames = path => {
 
 const genCsses = (rules, names) => {
   const result = []
-  for (const name of names) {
+  for (let name of names) {
     const rule = rules.find(r => r.reg.test(name))
     if (!rule) continue
-    const css = name.replace(rule.reg, rule.to).trim()
-    result.push(`.${name}{${css}}`) 
+    let css = name.replace(rule.reg, rule.to).trim()
+
+    // 处理 important 等特殊情况
+    if (/_i(_|$)/.test(name)) css = `${css} !important`
+    if (/_h(_|$)/.test(name)) name = `${name}:hover`
+
+    result.push(`.${name}{${css}}`)
   }
   return result
 }
