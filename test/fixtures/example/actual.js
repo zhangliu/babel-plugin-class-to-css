@@ -1,27 +1,31 @@
 import React, {Fragment} from 'react'
 
-class T extends React.Component {
+React.createElement(List, {
+  className: "list m60 pa"
+}, React.createElement('style', {className: 'babel-style'}))
 
-  // getPeople() {
-  //   if (false) return (
-  //     <div className="m70"></div>
-  //   )
-  //   return (
-  //     <div className="m50">
-  //       <div className="m60"></div>
-  //     </div>
-  //   )
-  // }
+// class T extends React.Component {
 
- 	render() {
-     return (
-      // <Fragment>
-      <div className='m30'>
-        <span className="m40">
-        </span>
-        <style className="babel-style" />
-      </div>
-      // </Fragment>
-     )
-    }
-}
+//   // getPeople() {
+//   //   if (false) return (
+//   //     <div className="m70"></div>
+//   //   )
+//   //   return (
+//   //     <div className="m50">
+//   //       <div className="m60"></div>
+//   //     </div>
+//   //   )
+//   // }
+
+//  	render() {
+//      return (
+//       // <Fragment>
+//       <div className='m30'>
+//         <span className="m40">
+//         </span>
+//         <style className="babel-style" />
+//       </div>
+//       // </Fragment>
+//      )
+//     }
+// }

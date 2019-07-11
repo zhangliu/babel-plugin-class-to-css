@@ -1,6 +1,6 @@
 {
   "presets": ["react"],
   "plugins": [
-    ["../../../src"]
+    ["../../../src", {"srcType": "source"}]
   ]
 }
