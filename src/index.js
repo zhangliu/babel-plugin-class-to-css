@@ -74,7 +74,7 @@ const isTargetStyle = (path, className) => {
     if (!args[0].value) return false
     if (args[0].value.toLowerCase() !== 'style') return false
     const prop = args[1].properties.find(prop => prop.key.name === 'className')
-    if (!prop.value) return false
+    if (!prop || !prop.value) return false
 
     return prop.value.value === className
   } catch (e) {
