@@ -34,9 +34,11 @@ export default function({types: t }) {
         try {
           const callee = path.node.callee
           const filename = file.opts.filename
+          if (!callee.object) return
+
           const isCreateEle = callee.object.name === 'React' || callee.property.name === 'createElement'
           if (!isCreateEle) return
-          if (isTargetStyle(path, styleClassName)) return addDangerouslySetInnerHTML(t, path, styles[filename])
+          if (isTargetStyle(path, styleClassName)) return addDangerouslySetInnerHTML(t, path, filename)
 
           const names = getClassNames(path)
           if (!names) return
@@ -72,6 +74,8 @@ const isTargetStyle = (path, className) => {
     if (!args[0].value) return false
     if (args[0].value.toLowerCase() !== 'style') return false
     const prop = args[1].properties.find(prop => prop.key.name === 'className')
+    if (!prop.value) return false
+
     return prop.value.value === className
   } catch (e) {
     console.log(e)
@@ -91,13 +95,14 @@ const isJSXTargetStyle = (path, className) => {
   }
 }
 
-const addDangerouslySetInnerHTML = (t, path, style) => {
+const addDangerouslySetInnerHTML = (t, path, filename) => {
   try {
     const arg = path.node.arguments[1]
     if (arg.type !== 'ObjectExpression') return
     if (!Array.isArray(arg.properties)) return
     
-    const styleSet = [...(new Set(style))].join('') // Set 用于去重
+    const styleSet = [...(new Set(styles[filename]))].join('') // Set 用于去重
+    styles[filename] = []
 
     const __html = t.ObjectProperty(t.Identifier('__html'), t.StringLiteral(styleSet))
     const value = t.ObjectExpression([__html])
@@ -109,7 +114,7 @@ const addDangerouslySetInnerHTML = (t, path, style) => {
   }
 }
 
-const addJSXDangerouslySetInnerHTML = (t, path, style) => {
+const addJSXDangerouslySetInnerHTML = (t, path, filename) => {
   try {
     // 先删除可能有的 dangerouslySetInnerHTML
     const node = path.node
@@ -118,7 +123,8 @@ const addJSXDangerouslySetInnerHTML = (t, path, style) => {
     if (dangerousAttr) attrs = node.attributes = attrs.filter(attr => attr !== dangerousAttr)
   
     // 加入新的 dangerouslySetInnerHTML
-    const styleSet = [...(new Set(style))].join('') // Set 用于去重
+    const styleSet = [...(new Set(styles[filename]))].join('') // Set 用于去重
+    styles[filename] = []
 
     const __html = t.ObjectProperty(t.Identifier('__html'), t.StringLiteral(styleSet))
     const value = t.JSXExpressionContainer(t.objectExpression([__html]))
