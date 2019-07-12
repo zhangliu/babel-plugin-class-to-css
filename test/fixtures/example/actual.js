@@ -19,6 +19,7 @@ class T extends React.Component {
         <Header className='header m50 h50'/>
         <span className="body m60 h60">hello world!</span>
         { isShow ? this.getPeople() : null}
+        <style className='babel-style'/>
       </div>
      )
     }

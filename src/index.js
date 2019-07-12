@@ -7,11 +7,7 @@ export default function({types: t }) {
     visitor: {
       CallExpression(path, { file, opts: { rules = [], unit = 'px' } }) {
         try {
-          const callee = path.node.callee
-          if (!callee.object) return
-
-          const isCreateEle = callee.object.name === 'React' || callee.property.name === 'createElement'
-          if (!isCreateEle) return
+          if (!isCreateEleCall(path.node)) return
 
           const names = getClassNames(path) || []
           if (names.length <= 0) return
@@ -29,6 +25,11 @@ export default function({types: t }) {
       }
     }
   };
+}
+
+const isCreateEleCall = node => {
+  const {object, property} = node.callee || {}
+  return object.name === 'React' && property.name === 'createElement'
 }
 
 const getClassNames = (path) => {
@@ -78,9 +79,20 @@ const tryAppendStyle = (t, path, style) => {
       t.memberExpression(t.identifier('React'), t.identifier('createElement')),
       [t.identifier('"style"'), dangerousExp]
     )
-
-    args.push(styleNode)
+    
+    path.node.arguments = args.filter(arg => !isBableStyleNode(arg))
+    path.node.arguments.push(styleNode)
   } catch(e) {
     console.log(e)
   }
+}
+
+const isBableStyleNode = (node) => {
+  if (node.type !== 'CallExpression') return false
+  if (!isCreateEleCall(node)) return false
+
+  const arg = node.arguments[1]
+  if (!arg || !arg.properties) return false
+  
+  return !!arg.properties.find(prop => prop.key.name === 'className' && prop.value.value === 'babel-style')
 }
