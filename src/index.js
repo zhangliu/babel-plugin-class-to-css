@@ -20,9 +20,9 @@ export default function({types: t }) {
           const cssRules = rules.concat(genRules(unit))
           const csses = genCsses(cssRules, names).concat(styles[filename])
 
-          styles[filename] = [...(new Set(csses))].join('')
+          styles[filename] = [...(new Set(csses))]
 
-          tryAppendStyle(t, path, filename)
+          tryAppendStyle(t, path, styles[filename].join(''))
         } catch(e) {
           console.log(e)
         }
@@ -60,16 +60,16 @@ const genCsses = (rules, names) => {
   return result
 }
 
-const tryAppendStyle = (t, path, filename) => {
+const tryAppendStyle = (t, path, style) => {
   try {
     const args = path.node.arguments || []
     if (!args[1] || !args[1].properties) return
     
-    const prop = args[1].properties.find(prop => prop.key.name === 'classToCss')
+    const prop = args[1].properties.find(prop => prop.key.name === 'classtocss')
     if (!prop) return
 
     // 生成 style 标签元素
-    const __html = t.ObjectProperty(t.Identifier('__html'), t.StringLiteral(styles[filename]))
+    const __html = t.ObjectProperty(t.Identifier('__html'), t.StringLiteral(style))
     const __htmlExp = t.ObjectExpression([__html])
     const dangerousProp = t.ObjectProperty(t.Identifier('dangerouslySetInnerHTML'), __htmlExp)
     const dangerousExp = t.ObjectExpression([dangerousProp])
