@@ -1,6 +1,7 @@
 const { genRules } = require('./rules')
 
 const styles = {}
+const BABEL_STYLE = 'babel-style'
 
 export default function({types: t }) {
   return {
@@ -28,7 +29,9 @@ export default function({types: t }) {
 }
 
 const isCreateEleCall = node => {
-  const {object, property} = node.callee || {}
+  if (!node || !node.callee) return false
+
+  const {object = {}, property = {}} = node.callee
   return object.name === 'React' && property.name === 'createElement'
 }
 
@@ -73,7 +76,8 @@ const tryAppendStyle = (t, path, style) => {
     const __html = t.ObjectProperty(t.Identifier('__html'), t.StringLiteral(style))
     const __htmlExp = t.ObjectExpression([__html])
     const dangerousProp = t.ObjectProperty(t.Identifier('dangerouslySetInnerHTML'), __htmlExp)
-    const dangerousExp = t.ObjectExpression([dangerousProp])
+    const classProp = t.ObjectProperty(t.Identifier('className'), t.StringLiteral(BABEL_STYLE))
+    const dangerousExp = t.ObjectExpression([dangerousProp, classProp])
 
     const styleNode = t.callExpression(
       t.memberExpression(t.identifier('React'), t.identifier('createElement')),
@@ -94,5 +98,5 @@ const isBableStyleNode = (node) => {
   const arg = node.arguments[1]
   if (!arg || !arg.properties) return false
   
-  return !!arg.properties.find(prop => prop.key.name === 'className' && prop.value.value === 'babel-style')
+  return !!arg.properties.find(prop => prop.key.name === 'className' && prop.value.value === BABEL_STYLE)
 }
