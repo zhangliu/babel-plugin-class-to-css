@@ -15,11 +15,11 @@ export default function({types: t }) {
 
           const filename = file.opts.filename
           const cssRules = rules.concat(genRules(unit))
-          const csses = genCsses(cssRules, names).concat(styles[filename])
+          const csses = genCsses(cssRules, names).concat(styles[filename] || [])
 
           styles[filename] = [...(new Set(csses))]
 
-          tryAppendStyle(t, path, styles[filename].join(''))
+          if (tryAppendStyle(t, path, styles[filename].join(''))) styles[filename] = []
         } catch(e) {
           console.log(e)
         }
@@ -86,6 +86,7 @@ const tryAppendStyle = (t, path, style) => {
     
     path.node.arguments = args.filter(arg => !isBableStyleNode(arg))
     path.node.arguments.push(styleNode)
+    return true
   } catch(e) {
     console.log(e)
   }
