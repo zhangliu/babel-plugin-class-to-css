@@ -39,13 +39,13 @@ const genRules = (unit = 'px') => {
 
     // background
     { reg: /^bgn($|_.*)/, to: 'background:none' },
-    { reg: /^bgc([0-9a-fA-F]{3,6})($|_.*)/, to: 'background-color:#$1' },
+    { reg: /^bgc([0-9a-fA-F]{3,8})($|_.*)/, to: 'background-color:#$1' },
 
     // font
     { reg: /^lh(\d+)($|_.*)/, to: 'line-height:$1' + unit },
     { reg: /^fwb($|_.*)/, to: 'font-weight:bold' },
     { reg: /^fs(\d+)($|_.*)/, to: 'font-size:$1' + unit },
-    { reg: /^c([0-9a-fA-F]{3,6})($|_.*)/, to: 'color:#$1' },
+    { reg: /^c([0-9a-fA-F]{3,8})($|_.*)/, to: 'color:#$1' },
     { reg: /^tdn($|_.*)/, to: 'text-decoration:none' },
     { reg: /^tdu($|_.*)/, to: 'text-decoration:underline' },
 
@@ -74,7 +74,7 @@ const genRules = (unit = 'px') => {
     { reg: /^btw(\d+)($|_.*)/, to: 'border-top-width:$1' + unit },
     { reg: /^bss($|_.*)/, to: 'border-style:solid' },
     { reg: /^bsd($|_.*)/, to: 'border-style:dashed' },
-    { reg: /^bc(\w{3,6})($|_.*)/, to: 'border-color:#$1' },
+    { reg: /^bc(\w{3,8})($|_.*)/, to: 'border-color:#$1' },
     { reg: /^br(\d+)($|_.*)/, to: 'border-radius:$1' + unit },
     { reg: /^btlr(\d+)($|_.*)/, to: 'border-top-left-radius:$1' + unit },
     { reg: /^btrr(\d+)($|_.*)/, to: 'border-top-right-radius:$1' + unit },
