@@ -14,7 +14,7 @@ export default function({types: t }) {
           if (names.length <= 0) return
 
           const filename = file.opts.filename
-          const cssRules = rules.concat(genRules(unit))
+          const cssRules = rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
           const csses = genCsses(cssRules, names).concat(styles[filename] || [])
 
           styles[filename] = [...(new Set(csses))]
