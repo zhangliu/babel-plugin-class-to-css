@@ -1,9 +1,15 @@
 const genRules = (unit = 'px') => {
   return [
-    //display
+    // display
     { reg: /^db($|_.*)/, to: 'display:block' },
     { reg: /^dib($|_.*)/, to: 'display:inline-block' },
     { reg: /^dn($|_.*)/, to: 'display:none' },
+    { reg: /^df($|_.*)/, to: 'display:flex' },
+
+    // flex
+    { reg: /^fdc($|_.*)/, to: 'flex-direction:column' },
+    { reg: /^aic($|_.*)/, to: 'align-items:center' },
+    { reg: /^jcc($|_.*)/, to: 'justify-content:center' },
 
     // margin
     { reg: /^m(-?\d+)($|_.*)/, to: 'margin:$1' + unit },
@@ -36,10 +42,12 @@ const genRules = (unit = 'px') => {
     { reg: /^tal($|_.*)/, to: 'text-align:left' },
     { reg: /^tar($|_.*)/, to: 'text-align:right' },
     { reg: /^tac($|_.*)/, to: 'text-align:center' },
+    { reg: /^tdlt($|_.*)/, to: 'text-decoration:line-through' },
 
     // background
     { reg: /^bgn($|_.*)/, to: 'background:none' },
     { reg: /^bgc([0-9a-fA-F]{3,8})($|_.*)/, to: 'background-color:#$1' },
+    { reg: /^bilg-(\d+)-(\w{3,8})-(\w{3,8})($|_.*)/, to: 'background-image:linear-gradient($1deg, #$2, #$3)'},
 
     // font
     { reg: /^lh(\d+)($|_.*)/, to: 'line-height:$1' + unit },
@@ -63,8 +71,12 @@ const genRules = (unit = 'px') => {
     { reg: /^w(\d+)($|_.*)/, to: 'width:$1' + unit },
     { reg: /^w(\d+)b($|_.*)/, to: 'width:$1%' },
     { reg: /^miw(\d+)($|_.*)/, to: 'min-width:$1' + unit },
+    { reg: /^maw(\d+)($|_.*)/, to: 'max-width:$1' + unit },
+
     { reg: /^h(\d+)($|_.*)/, to: 'height:$1' + unit },
+    { reg: /^h(\d+)b($|_.*)/, to: 'height:$1%' },
     { reg: /^mih(\d+)($|_.*)/, to: 'min-height:$1' + unit },
+    { reg: /^mah(\d+)($|_.*)/, to: 'max-height:$1' + unit },
 
     // border
     { reg: /^bw(\d+)($|_.*)/, to: 'border-width:$1' + unit },
@@ -80,6 +92,9 @@ const genRules = (unit = 'px') => {
     { reg: /^btrr(\d+)($|_.*)/, to: 'border-top-right-radius:$1' + unit },
     { reg: /^bbrr(\d+)($|_.*)/, to: 'border-bottom-right-radius:$1' + unit },
     { reg: /^bblr(\d+)($|_.*)/, to: 'border-bottom-left-radius:$1' + unit },
+
+    // 透明
+    { reg: /^o(\\d+)($|_.*)/, to: 'opacity:.$1' },
   ]
 }
 
