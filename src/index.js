@@ -10,7 +10,7 @@ export default function({types: t }) {
         try {
           if (!isCreateEleCall(path.node)) return
 
-          // const names = getClassNames(path) || []
+          const names = getClassNames(path) || []
           // if (names.length <= 0) return
 
           const filename = file.opts.filename
