@@ -10,8 +10,8 @@ export default function({types: t }) {
         try {
           if (!isCreateEleCall(path.node)) return
 
-          const names = getClassNames(path) || []
-          if (names.length <= 0) return
+          // const names = getClassNames(path) || []
+          // if (names.length <= 0) return
 
           const filename = file.opts.filename
           const cssRules = rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
