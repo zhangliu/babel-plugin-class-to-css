@@ -7,7 +7,7 @@ const spanPlugin = require('./plugins/span')
 
 const styles = {}
 let cssRules
-const BABEL_STYLE = 'babel-style'
+// const BABEL_STYLE = 'babel-style'
 
 export default function({types: t }) {
   return {
@@ -15,18 +15,21 @@ export default function({types: t }) {
       CallExpression(path, { file, opts: { rules = [], unit = 'px' } }) {
         try {
           if (!isCreateEleCall(path.node)) return
+          
+          const filename = file.opts.filename
+          styles[filename] = styles[filename] || {}
+          styles[filename].canGen = styles[filename].canGen || hasClasstocssProp(path)
 
           let names = getClassNames(path) || []
           names = borderPlugin.handle(names, path)
           names = spanPlugin.handle(names, path)
 
-          const filename = file.opts.filename
           cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
-          const csses = genCsses(cssRules, names).concat(styles[filename] || [])
+          const csses = genCsses(cssRules, names).concat(styles[filename].csses || [])
 
-          styles[filename] = [...(new Set(csses))]
+          styles[filename].csses = [...(new Set(csses))]
 
-          // if (tryAppendStyle(t, path, styles[filename].join(''))) styles[filename] = []
+          // if (tryAppendStyle(t, path, styles[filename].csses.join(''))) styles[filename].csses = []
         } catch(e) {
           console.log(e)
         }
@@ -34,13 +37,17 @@ export default function({types: t }) {
     },
 
     post({ opts: { filename } }) {
-      const style = styles[filename] || []
+      if (!styles[filename]) return
+      if (!styles[filename].canGen) return styles[filename] = []
+
+      const style = styles[filename].csses || []
       if (style.length <= 0) return
 
       const index = basename(filename).indexOf('.')
       const filePath = `${dirname(filename)}/${basename(filename).substr(0, index)}.ctc.css`
       console.warn('will gen css file at: ', filePath)
       fs.writeFileSync(filePath, style.join(''))
+      styles[filename] = []
     }
   };
 }
@@ -50,6 +57,14 @@ const isCreateEleCall = node => {
 
   const {object = {}, property = {}} = node.callee
   return object.name === 'React' && property.name === 'createElement'
+}
+
+const hasClasstocssProp = path => {
+  const args = path.node.arguments || []
+  if (!args[1] || !args[1].properties) return false
+  
+  const prop = args[1].properties.find(prop => prop.key.name === 'classtocss')
+  return !!prop
 }
 
 const getClassNames = (path) => {
@@ -84,40 +99,40 @@ const genCsses = (rules, names) => {
   return result
 }
 
-const tryAppendStyle = (t, path, style) => {
-  try {
-    const args = path.node.arguments || []
-    if (!args[1] || !args[1].properties) return
+// const tryAppendStyle = (t, path, style) => {
+//   try {
+//     const args = path.node.arguments || []
+//     if (!args[1] || !args[1].properties) return
     
-    const prop = args[1].properties.find(prop => prop.key.name === 'classtocss')
-    if (!prop) return
+//     const prop = args[1].properties.find(prop => prop.key.name === 'classtocss')
+//     if (!prop) return
 
-    // 生成 style 标签元素
-    const __html = t.ObjectProperty(t.Identifier('__html'), t.StringLiteral(style))
-    const __htmlExp = t.ObjectExpression([__html])
-    const dangerousProp = t.ObjectProperty(t.Identifier('dangerouslySetInnerHTML'), __htmlExp)
-    const classProp = t.ObjectProperty(t.Identifier('className'), t.StringLiteral(BABEL_STYLE))
-    const dangerousExp = t.ObjectExpression([dangerousProp, classProp])
+//     // 生成 style 标签元素
+//     const __html = t.ObjectProperty(t.Identifier('__html'), t.StringLiteral(style))
+//     const __htmlExp = t.ObjectExpression([__html])
+//     const dangerousProp = t.ObjectProperty(t.Identifier('dangerouslySetInnerHTML'), __htmlExp)
+//     const classProp = t.ObjectProperty(t.Identifier('className'), t.StringLiteral(BABEL_STYLE))
+//     const dangerousExp = t.ObjectExpression([dangerousProp, classProp])
 
-    const styleNode = t.callExpression(
-      t.memberExpression(t.identifier('React'), t.identifier('createElement')),
-      [t.identifier('"style"'), dangerousExp]
-    )
+//     const styleNode = t.callExpression(
+//       t.memberExpression(t.identifier('React'), t.identifier('createElement')),
+//       [t.identifier('"style"'), dangerousExp]
+//     )
     
-    path.node.arguments = args.filter(arg => !isBableStyleNode(arg))
-    path.node.arguments.push(styleNode)
-    return true
-  } catch(e) {
-    console.log(e)
-  }
-}
+//     path.node.arguments = args.filter(arg => !isBableStyleNode(arg))
+//     path.node.arguments.push(styleNode)
+//     return true
+//   } catch(e) {
+//     console.log(e)
+//   }
+// }
 
-const isBableStyleNode = (node) => {
-  if (node.type !== 'CallExpression') return false
-  if (!isCreateEleCall(node)) return false
+// const isBableStyleNode = (node) => {
+//   if (node.type !== 'CallExpression') return false
+//   if (!isCreateEleCall(node)) return false
 
-  const arg = node.arguments[1]
-  if (!arg || !arg.properties) return false
+//   const arg = node.arguments[1]
+//   if (!arg || !arg.properties) return false
   
-  return !!arg.properties.find(prop => prop.key.name === 'className' && prop.value.value === BABEL_STYLE)
-}
+//   return !!arg.properties.find(prop => prop.key.name === 'className' && prop.value.value === BABEL_STYLE)
+// }
