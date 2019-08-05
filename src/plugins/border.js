@@ -7,7 +7,7 @@ const handle = (names, rules, path) => {
   // 处理边宽
   const bwRule = rules.find(r => r.type === 'border-width')
   const bwName = names.find(n => bwRule.reg.test(n))
-  if (!bwName) names.unshift('bw0')
+  if (!bwName) names.unshift('bw1')
 
   // 处理 style
   const bsRule = rules.find(r => r.type === 'border-style')
