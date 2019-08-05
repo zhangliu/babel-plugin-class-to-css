@@ -1,3 +1,6 @@
+const fs = require('fs')
+const { dirname, basename } = require('path')
+
 const { genRules } = require('./rules')
 const borderPlugin = require('./plugins/border')
 const spanPlugin = require('./plugins/span')
@@ -23,11 +26,21 @@ export default function({types: t }) {
 
           styles[filename] = [...(new Set(csses))]
 
-          if (tryAppendStyle(t, path, styles[filename].join(''))) styles[filename] = []
+          // if (tryAppendStyle(t, path, styles[filename].join(''))) styles[filename] = []
         } catch(e) {
           console.log(e)
         }
       }
+    },
+
+    post({ opts: { filename } }) {
+      const style = styles[filename] || []
+      if (style.length <= 0) return
+
+      const index = basename(filename).indexOf('.')
+      const filePath = `${dirname(filename)}/${basename(filename).substr(0, index)}.ctc.css`
+      console.warn('will gen css file at: ', filePath)
+      fs.writeFileSync(filePath, style.join(''))
     }
   };
 }
