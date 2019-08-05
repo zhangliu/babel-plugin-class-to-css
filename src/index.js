@@ -1,5 +1,6 @@
 const { genRules } = require('./rules')
 const borderPlugin = require('./plugins/border')
+const spanPlugin = require('./plugins/span')
 
 const styles = {}
 let cssRules
@@ -12,11 +13,12 @@ export default function({types: t }) {
         try {
           if (!isCreateEleCall(path.node)) return
 
-          cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
           let names = getClassNames(path) || []
-          names = borderPlugin.handle(names, cssRules, path)
+          names = borderPlugin.handle(names, path)
+          names = spanPlugin.handle(names, path)
 
           const filename = file.opts.filename
+          cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
           const csses = genCsses(cssRules, names).concat(styles[filename] || [])
 
           styles[filename] = [...(new Set(csses))]

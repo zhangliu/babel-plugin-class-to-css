@@ -1,16 +1,13 @@
 const handle = (names, path) => {
   if (names.length <= 0) return names
+  if (path.node.arguments[0].value !== 'span') return names
 
-  let name = names.find(n => /^bc[0-9a-fA-F]{2,8}$/.test(n))
+  // 判断是否有 margin 和 padding 的设置
+  const reg = /^[mp][trbm]{0,1}\d+$/
+  let name = names.find(n => reg.test(n))
   if (!name) return names
 
-  // 处理边宽
-  name = names.find(n => /^bw\d+$/.test(n))
-  if (!name) names.unshift('bw1')
-
-  // 处理 style
-  name = names.find(n => /^bss$/.test(n))
-  if (!name) names.push('bss')
+  names.unshift('dib')
 
   const uniqNames = [...(new Set(names))]
   const arg = path.node.arguments[1]
