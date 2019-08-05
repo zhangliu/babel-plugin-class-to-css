@@ -58,6 +58,8 @@ const genCsses = (rules, names) => {
     // 处理 important 等特殊情况
     if (/_i(_|$)/.test(name)) css = `${css} !important`
     if (/_h(_|$)/.test(name)) name = `${name}:hover`
+    if (/_f(_|$)/.test(name)) name = `${name}::before`
+    if (/_a(_|$)/.test(name)) name = `${name}::after`
 
     result.push(`.${name}{${css}}`)
   }
