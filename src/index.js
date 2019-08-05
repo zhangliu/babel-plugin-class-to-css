@@ -1,6 +1,8 @@
 const { genRules } = require('./rules')
+const borderPlugin = require('./plugins/border')
 
 const styles = {}
+let cssRules
 const BABEL_STYLE = 'babel-style'
 
 export default function({types: t }) {
@@ -10,11 +12,11 @@ export default function({types: t }) {
         try {
           if (!isCreateEleCall(path.node)) return
 
-          const names = getClassNames(path) || []
-          // if (names.length <= 0) return
+          cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
+          let names = getClassNames(path) || []
+          names = borderPlugin.handle(names, cssRules, path)
 
           const filename = file.opts.filename
-          const cssRules = rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
           const csses = genCsses(cssRules, names).concat(styles[filename] || [])
 
           styles[filename] = [...(new Set(csses))]
@@ -53,7 +55,8 @@ const genCsses = (rules, names) => {
   for (let name of names) {
     const rule = rules.find(r => r.reg.test(name))
     if (!rule) continue
-    let css = name.replace(rule.reg, rule.to).trim()
+
+    let css = rule.func ? rule.func(name) : name.replace(rule.reg, rule.to).trim()
 
     // 处理 important 等特殊情况
     if (/_i(_|$)/.test(name)) css = `${css} !important`
