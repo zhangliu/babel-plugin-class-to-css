@@ -7,7 +7,6 @@ const spanPlugin = require('./plugins/span')
 
 const styles = {}
 let cssRules
-// const BABEL_STYLE = 'babel-style'
 
 export default function({types: t }) {
   return {
@@ -15,7 +14,7 @@ export default function({types: t }) {
       CallExpression(path, { file, opts: { rules = [], unit = 'px' } }) {
         try {
           if (!isCreateEleCall(path.node)) return
-          
+
           const filename = file.opts.filename
           styles[filename] = styles[filename] || {}
           styles[filename].canGen = styles[filename].canGen || hasClasstocssProp(path)
@@ -28,8 +27,6 @@ export default function({types: t }) {
           const csses = genCsses(cssRules, names).concat(styles[filename].csses || [])
 
           styles[filename].csses = [...(new Set(csses))]
-
-          // if (tryAppendStyle(t, path, styles[filename].csses.join(''))) styles[filename].csses = []
         } catch(e) {
           console.log(e)
         }
@@ -98,41 +95,3 @@ const genCsses = (rules, names) => {
   }
   return result
 }
-
-// const tryAppendStyle = (t, path, style) => {
-//   try {
-//     const args = path.node.arguments || []
-//     if (!args[1] || !args[1].properties) return
-    
-//     const prop = args[1].properties.find(prop => prop.key.name === 'classtocss')
-//     if (!prop) return
-
-//     // 生成 style 标签元素
-//     const __html = t.ObjectProperty(t.Identifier('__html'), t.StringLiteral(style))
-//     const __htmlExp = t.ObjectExpression([__html])
-//     const dangerousProp = t.ObjectProperty(t.Identifier('dangerouslySetInnerHTML'), __htmlExp)
-//     const classProp = t.ObjectProperty(t.Identifier('className'), t.StringLiteral(BABEL_STYLE))
-//     const dangerousExp = t.ObjectExpression([dangerousProp, classProp])
-
-//     const styleNode = t.callExpression(
-//       t.memberExpression(t.identifier('React'), t.identifier('createElement')),
-//       [t.identifier('"style"'), dangerousExp]
-//     )
-    
-//     path.node.arguments = args.filter(arg => !isBableStyleNode(arg))
-//     path.node.arguments.push(styleNode)
-//     return true
-//   } catch(e) {
-//     console.log(e)
-//   }
-// }
-
-// const isBableStyleNode = (node) => {
-//   if (node.type !== 'CallExpression') return false
-//   if (!isCreateEleCall(node)) return false
-
-//   const arg = node.arguments[1]
-//   if (!arg || !arg.properties) return false
-  
-//   return !!arg.properties.find(prop => prop.key.name === 'className' && prop.value.value === BABEL_STYLE)
-// }
