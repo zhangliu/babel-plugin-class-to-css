@@ -70,7 +70,7 @@ const getClassNames = (path) => {
     if (arg.type !== 'ObjectExpression') return
     if (!Array.isArray(arg.properties))  return
     const prop = arg.properties.find(prop => prop.key.name === 'className')
-    if (!prop)  return
+    if (!prop || !prop.value || !prop.value.value)  return
     return prop.value.value.split(' ').filter(s => s.length)
   } catch (e) {
     console.log(e)
