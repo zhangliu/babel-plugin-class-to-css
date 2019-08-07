@@ -94,7 +94,7 @@ const genRules = (unit = 'px') => {
     { reg: /^bblr(\d+)($|_.*)/, to: 'border-bottom-left-radius:$1' + unit },
 
     // 透明
-    { reg: /^o(\\d+)($|_.*)/, to: 'opacity:.$1' },
+    { reg: /^o(\d+)($|_.*)/, to: 'opacity:.$1' },
   ]
 }
 
