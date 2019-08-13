@@ -4,6 +4,7 @@ const { dirname, basename } = require('path')
 const { genRules } = require('./rules')
 const borderPlugin = require('./plugins/border')
 const spanPlugin = require('./plugins/span')
+const absolutePlugin = require('./plugins/absolute')
 
 const styles = {}
 let cssRules
@@ -22,6 +23,7 @@ export default function({types: t }) {
           let names = getClassNames(path) || []
           names = borderPlugin.handle(names, path)
           names = spanPlugin.handle(names, path)
+          names = absolutePlugin.handle(names, path)
 
           cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
           const csses = genCsses(cssRules, names).concat(styles[filename].csses || [])
