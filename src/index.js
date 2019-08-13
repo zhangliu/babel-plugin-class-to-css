@@ -6,7 +6,6 @@ const borderPlugin = require('./plugins/border')
 const spanPlugin = require('./plugins/span')
 const absolutePlugin = require('./plugins/absolute')
 
-const styles = {}
 let cssRules
 
 export default function({types: t }) {
@@ -14,18 +13,20 @@ export default function({types: t }) {
     pre(state) {
       this.cssContainer = ''
       this.csses = []
+      this.canGen = false
 
       const comments = (state.ast.comments || []).filter(c => c.type === 'CommentLine' && c.value)
       const reg = /^classtocss(=([0-9a-zA-Z_-]*))?.*$/
       const comment = comments.find(c => reg.test(c.value.trim()))
       if (!comment) return
 
+      this.canGen = true
       const container = comment.value.trim().replace(reg, '$2')
-      this.cssContainer = container || basename(dirname(state.opts.filename)).toLowerCase()
+      this.cssContainer = container || '' // || basename(dirname(state.opts.filename)).toLowerCase()
     },
     visitor: {
       CallExpression(path, { file, opts: { rules = [], unit = 'px' } }) {
-        if (!this.cssContainer) return
+        if (!this.canGen) return
         try {
           if (!isCreateEleCall(path.node)) return
 
@@ -44,14 +45,15 @@ export default function({types: t }) {
     },
 
     post({ opts: { filename } }) {
-      if (!this.cssContainer) return
+      if (!this.canGen) return
       if (this.csses.length <= 0) return
 
       const index = basename(filename).indexOf('.')
       const filePath = `${dirname(filename)}/${basename(filename).substr(0, index)}.ctc.css`
 
       console.warn('will gen css file at: ', filePath)
-      const csses = this.csses.map(c => `.${this.cssContainer} ${c}`)
+      const containerClass = this.cssContainer ? `.${this.cssContainer} ` : ''
+      const csses = this.csses.map(c => `.${containerClass}${c}`)
       fs.writeFileSync(filePath, csses.join(''))
     }
   };
