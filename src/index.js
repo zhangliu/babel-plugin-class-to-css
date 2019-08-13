@@ -21,7 +21,7 @@ export default function({types: t }) {
       if (!comment) return
 
       const container = comment.value.trim().replace(reg, '$2')
-      this.cssContainer = container || basename(dirname(state.opts.filename))
+      this.cssContainer = container || basename(dirname(state.opts.filename)).toLowerCase()
     },
     visitor: {
       CallExpression(path, { file, opts: { rules = [], unit = 'px' } }) {
