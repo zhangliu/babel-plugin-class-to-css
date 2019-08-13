@@ -53,7 +53,7 @@ export default function({types: t }) {
 
       console.warn('will gen css file at: ', filePath)
       const containerClass = this.cssContainer ? `.${this.cssContainer} ` : ''
-      const csses = this.csses.map(c => `.${containerClass}${c}`)
+      const csses = this.csses.map(c => `${containerClass}${c}`)
       fs.writeFileSync(filePath, csses.join(''))
     }
   };
