@@ -1,6 +1,8 @@
 // classtocss
 import React from 'react'
 
+import './actual.ctc.css'
+
 class T extends React.Component {
 
  	render() {

@@ -1,4 +1,5 @@
 const fs = require('fs')
+const { EOL } = require('os')
 const { dirname, basename } = require('path')
 
 const { genRules } = require('./rules')
@@ -11,18 +12,20 @@ let cssRules
 export default function({types: t }) {
   return {
     pre(state) {
-      this.cssContainer = ''
-      this.csses = []
-      this.canGen = false
+      const filename = state.opts.filename
+      const index = basename(filename).indexOf('.')
+      const cssFilename = `${basename(filename).substr(0, index)}.ctc.css`
 
-      const comments = (state.ast.comments || []).filter(c => c.type === 'CommentLine' && c.value)
-      const reg = /^classtocss(=([0-9a-zA-Z_-]*))?.*$/
-      const comment = comments.find(c => reg.test(c.value.trim()))
-      if (!comment) return
+      const body = state.ast.program ? state.ast.program.body || [] : []
+      const cssImport = body.find(b => {
+        const isTypeOk = b.type === 'ImportDeclaration'
+        return isTypeOk && cssFilename === basename(b.source.value)
+      })
+      if (!cssImport) return
 
       this.canGen = true
-      const container = comment.value.trim().replace(reg, '$2')
-      this.cssContainer = container || '' // || basename(dirname(state.opts.filename)).toLowerCase()
+      this.cssFilename = cssFilename
+      this.csses = []
     },
     visitor: {
       CallExpression(path, { file, opts: { rules = [], unit = 'px' } }) {
@@ -48,13 +51,11 @@ export default function({types: t }) {
       if (!this.canGen) return
       if (this.csses.length <= 0) return
 
-      const index = basename(filename).indexOf('.')
-      const filePath = `${dirname(filename)}/${basename(filename).substr(0, index)}.ctc.css`
+      const cssFilename = `${dirname(filename)}/${this.cssFilename}`
 
-      console.warn('will gen css file at: ', filePath)
-      const containerClass = this.cssContainer ? `.${this.cssContainer} ` : ''
-      const csses = this.csses.map(c => `${containerClass}${c}`)
-      fs.writeFileSync(filePath, csses.join(''))
+      console.warn('will gen css file at: ', cssFilename)
+      const content = `/* 自动生成文件，请不要修改 */${EOL}${this.csses.join(EOL)}`
+      fs.writeFileSync(cssFilename, content)
     }
   };
 }
@@ -65,14 +66,6 @@ const isCreateEleCall = node => {
   const {object = {}, property = {}} = node.callee
   return object.name === 'React' && property.name === 'createElement'
 }
-
-// const hasClasstocssProp = path => {
-//   const args = path.node.arguments || []
-//   if (!args[1] || !args[1].properties) return false
-  
-//   const prop = args[1].properties.find(prop => prop.key.name === 'classtocss')
-//   return !!prop
-// }
 
 const getClassNames = (path) => {
   try {
