@@ -11,14 +11,23 @@ let cssRules
 
 export default function({types: t }) {
   return {
+    pre(state) {
+      this.cssContainer = ''
+      this.csses = []
+
+      const comments = (state.ast.comments || []).filter(c => c.type === 'CommentLine' && c.value)
+      const reg = /^classtocss(=([0-9a-zA-Z_-]*))?.*$/
+      const comment = comments.find(c => reg.test(c.value.trim()))
+      if (!comment) return
+
+      const container = comment.value.trim().replace(reg, '$2')
+      this.cssContainer = container || basename(dirname(state.opts.filename))
+    },
     visitor: {
       CallExpression(path, { file, opts: { rules = [], unit = 'px' } }) {
+        if (!this.cssContainer) return
         try {
           if (!isCreateEleCall(path.node)) return
-
-          const filename = file.opts.filename
-          styles[filename] = styles[filename] || {}
-          styles[filename].canGen = styles[filename].canGen || hasClasstocssProp(path)
 
           let names = getClassNames(path) || []
           names = borderPlugin.handle(names, path)
@@ -26,9 +35,8 @@ export default function({types: t }) {
           names = absolutePlugin.handle(names, path)
 
           cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
-          const csses = genCsses(cssRules, names).concat(styles[filename].csses || [])
-
-          styles[filename].csses = [...(new Set(csses))]
+          const csses = genCsses(cssRules, names).concat(this.csses)
+          this.csses = [...(new Set(csses))]
         } catch(e) {
           console.log(e)
         }
@@ -36,17 +44,15 @@ export default function({types: t }) {
     },
 
     post({ opts: { filename } }) {
-      if (!styles[filename]) return
-      if (!styles[filename].canGen) return styles[filename] = []
-
-      const style = styles[filename].csses || []
-      if (style.length <= 0) return
+      if (!this.cssContainer) return
+      if (this.csses.length <= 0) return
 
       const index = basename(filename).indexOf('.')
       const filePath = `${dirname(filename)}/${basename(filename).substr(0, index)}.ctc.css`
+
       console.warn('will gen css file at: ', filePath)
-      fs.writeFileSync(filePath, style.join(''))
-      styles[filename] = []
+      const csses = this.csses.map(c => `.${this.cssContainer} ${c}`)
+      fs.writeFileSync(filePath, csses.join(''))
     }
   };
 }
@@ -58,13 +64,13 @@ const isCreateEleCall = node => {
   return object.name === 'React' && property.name === 'createElement'
 }
 
-const hasClasstocssProp = path => {
-  const args = path.node.arguments || []
-  if (!args[1] || !args[1].properties) return false
+// const hasClasstocssProp = path => {
+//   const args = path.node.arguments || []
+//   if (!args[1] || !args[1].properties) return false
   
-  const prop = args[1].properties.find(prop => prop.key.name === 'classtocss')
-  return !!prop
-}
+//   const prop = args[1].properties.find(prop => prop.key.name === 'classtocss')
+//   return !!prop
+// }
 
 const getClassNames = (path) => {
   try {
