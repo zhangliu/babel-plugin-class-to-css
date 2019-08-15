@@ -1,3 +1,5 @@
+const backgroundImg = require('./converts/backgroundImg')
+
 const genRules = (unit = 'px') => {
   return [
     // display
@@ -46,6 +48,7 @@ const genRules = (unit = 'px') => {
 
     // background
     { reg: /^bgn($|_.*)/, to: 'background:none' },
+    { reg: /^bgi([0-9a-zA-Z]+)-([0-9a-zA-Z]+)($|_.*)/, func: backgroundImg },
     { reg: /^bgc([0-9a-fA-F]{3,8})($|_.*)/, to: 'background-color:#$1' },
     { reg: /^bilg-(\d+)-(\w{3,8})-(\w{3,8})($|_.*)/, to: 'background-image:linear-gradient($1deg, #$2, #$3)'},
 

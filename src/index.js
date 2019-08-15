@@ -28,7 +28,7 @@ export default function({types: t }) {
       this.csses = []
     },
     visitor: {
-      CallExpression(path, { file, opts: { rules = [], unit = 'px' } }) {
+      CallExpression(path, { file, opts: { rules = [], unit = 'px', imgUrl } }) {
         if (!this.canGen) return
         try {
           if (!isCreateEleCall(path.node)) return
@@ -39,7 +39,7 @@ export default function({types: t }) {
           names = absolutePlugin.handle(names, path)
 
           cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
-          const csses = genCsses(cssRules, names).concat(this.csses)
+          const csses = genCsses(cssRules, names, { imgUrl }).concat(this.csses)
           this.csses = [...(new Set(csses))]
         } catch(e) {
           console.log(e)
@@ -80,13 +80,13 @@ const getClassNames = (path) => {
   }
 }
 
-const genCsses = (rules, names) => {
+const genCsses = (rules, names, opts) => {
   const result = []
   for (let name of names) {
     const rule = rules.find(r => r.reg.test(name))
     if (!rule) continue
 
-    let css = rule.func ? rule.func(name) : name.replace(rule.reg, rule.to).trim()
+    let css = rule.func ? rule.func(name, opts) : name.replace(rule.reg, rule.to).trim()
 
     // 处理 important 等特殊情况
     if (/_i(_|$)/.test(name)) css = `${css} !important`
