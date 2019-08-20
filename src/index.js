@@ -50,14 +50,16 @@ export default function({types: t }) {
 
           cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
 
-          // 插件处理
-          for(const plugin of plugins) {
-            const result = plugin.handle(names, path, cssRules, { imgUrl })
-            if (!result) continue
-            names = result.names
-            this.csses = this.csses.concat(result.csses)
+          // 插件处理, ctc- 是插件处理后的结果，有的话表示处理过了
+          if (!names.find(name => /^ctc-.*$/.test(name))) {
+            for(const plugin of plugins) {
+              const result = plugin.handle(names, path, cssRules, { imgUrl })
+              if (!result) continue
+              names = result.names
+              this.csses = this.csses.concat(result.csses)
+            }
+            setClassName(path, names)
           }
-          setClassName(path, names)
 
           const csses = genCsses(names, cssRules, { imgUrl }).concat(this.csses)
           this.csses = [...(new Set(csses))]
