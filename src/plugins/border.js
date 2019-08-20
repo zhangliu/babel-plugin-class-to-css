@@ -8,16 +8,17 @@ const handle = (names, path, rules, opts) => {
 
   // 自动添加 bw1 和 bw0
   const bwReg = /^b[trbl]?w\d+$/
-  name = names.find(name => bwReg.test(name))
-  if (!name) names.unshift('bw1')
 
-  const bwNames = names.filter(name => bwReg.test(name))
-  if (bwNames.length <= 1) return
+  let bwNames = names.filter(name => bwReg.test(name))
+  if (!bwNames.length) bwNames = ['bw1']
+  
+  let bsName = names.find(name => /^bss$/.test(name))
 
+  const bNames = bsName ? bwNames : bwNames.concat(['bss'])
   // 合并 class
-  const key = `ctc-${bwNames.join('-')}`
+  const key = `ctc-${bNames.join('-')}`
   names.push(key)
-  const value = genValues(bwNames, rules, opts).join(';')
+  const value = genValues(bNames, rules, opts).join(';')
   const csses = [`.${key}{${value}}`]
 
   const newNames = [...(new Set(names))].filter(name => !bwReg.test(name))

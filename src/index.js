@@ -49,7 +49,7 @@ export default function({types: t }) {
           if (names.length <= 0) return
 
           cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
-
+          console.log(names, 'xxxxxxxxxxxxxxxxxxxxxxxxxx')
           // 插件处理
           for(const plugin of plugins) {
             const result = plugin.handle(names, path, cssRules, { imgUrl })
