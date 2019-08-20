@@ -1,23 +1,28 @@
-const handle = (names, path) => {
-  if (names.length <= 0) return names
+const { genValues } = require('../utils/css')
+
+const handle = (names, path, rules, opts) => {
+  if (names.length <= 0) return
 
   let name = names.find(n => /^bc[0-9a-fA-F]{2,8}$/.test(n))
-  if (!name) return names
+  if (!name) return
 
-  // 处理边宽
-  name = names.find(n => /^b[trbl]?w\d+$/.test(n))
+  // 自动添加 bw1 和 bw0
+  const bwReg = /^b[trbl]?w\d+$/
+  name = names.find(name => bwReg.test(name))
   if (!name) names.unshift('bw1')
 
-  // 处理 style
-  name = names.find(n => /^bss$/.test(n))
-  if (!name) names.push('bss')
+  const bwNames = names.filter(name => bwReg.test(name))
+  if (bwNames.length <= 1) return
 
-  const uniqNames = [...(new Set(names))]
-  const arg = path.node.arguments[1]
-  const prop = arg.properties.find(prop => prop.key.name === 'className')
-  prop.value.value = uniqNames.join(' ')
+  // 合并 class
+  const key = `ctc-${bwNames.join('-')}`
+  names.push(key)
+  const value = genValues(bwNames, rules, opts).join(';')
+  const csses = [`.${key}{${value}}`]
 
-  return uniqNames;
+  const newNames = [...(new Set(names))].filter(name => !bwReg.test(name))
+
+  return { names: newNames, csses }
 }
 
 module.exports = {
