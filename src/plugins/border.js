@@ -5,7 +5,7 @@ const handle = (names, path) => {
   if (!name) return names
 
   // 处理边宽
-  name = names.find(n => /^bw\d+$/.test(n))
+  name = names.find(n => /^b[trbl]?w\d+$/.test(n))
   if (!name) names.unshift('bw1')
 
   // 处理 style
