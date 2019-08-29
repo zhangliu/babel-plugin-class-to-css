@@ -98,6 +98,7 @@ const genRules = (unit = 'px') => {
 
     // 透明
     { reg: /^o(\d+)($|_.*)/, to: 'opacity:.$1' },
+    { reg: /^zi(-?\d+)($|_.*)/, to: 'z-index:$1' },
   ]
 }
 
