@@ -74,11 +74,10 @@ export default function({types: t }) {
 
     post({ opts: { filename } }) {
       if (!this.canGen) return
-      if (this.csses.length <= 0) return
 
       const cssFilename = `${dirname(filename)}/${this.cssFilename}`
 
-      console.warn('will gen css file at: ', cssFilename)
+      console.warn('生成css文件：', cssFilename)
       const content = `/* 自动生成文件，请不要修改 */${EOL}${this.csses.join(EOL)}`
       fs.writeFileSync(cssFilename, content)
     }
