@@ -1,6 +1,6 @@
 const handle = (names) => {
   if (names.length <= 0) return
-  if (names.includs('pf')) return
+  if (names.includes('pf')) return
 
   // 判断是否有 top/right/bottom/left 和 padding 的设置
   const reg = /^[trbl]{1,1}\d+$/
