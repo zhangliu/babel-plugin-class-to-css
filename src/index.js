@@ -6,6 +6,7 @@ const { getClassNames, setClassName } = require('./utils/className')
 const { genCsses } = require('./utils/css')
 const { genRules } = require('./rules')
 const borderPlugin = require('./plugins/border')
+const borderRadiusPlugin = require('./plugins/borderRadius')
 const marginPlugin = require('./plugins/margin')
 const paddingPlugin = require('./plugins/padding')
 const spanPlugin = require('./plugins/span')
@@ -15,6 +16,7 @@ let cssRules
 const plugins = [
   absolutePlugin,
   borderPlugin,
+  borderRadiusPlugin,
   spanPlugin,
   marginPlugin,
   paddingPlugin
