@@ -12,6 +12,11 @@ const genRules = (unit = 'px') => {
     { reg: /^fdc($|_.*)/, to: 'flex-direction:column' },
     { reg: /^aic($|_.*)/, to: 'align-items:center' },
     { reg: /^jcc($|_.*)/, to: 'justify-content:center' },
+    { reg: /^dif($|_.*)/, to: 'display:inline-flex' },
+    { reg: /^jcsb($|_.*)/, to: 'justify-content:space-between' },
+    { reg: /^jcsa($|_.*)/, to: 'justify-content:space-around' },
+    { reg: /^jcfe($|_.*)/, to: 'justify-content:flex-end' },
+    { reg: /^asfe($|_.*)/, to: 'align-self:flex-end' },
 
     // margin
     { reg: /^m(-?\d+)($|_.*)/, to: 'margin:$1' + unit },
@@ -39,6 +44,7 @@ const genRules = (unit = 'px') => {
     { reg: /^ofh($|_.*)/, to: 'overflow:hidden' },
     { reg: /^ofa($|_.*)/, to: 'overflow:auto' },
     { reg: /^cb($|_.*)/, to: 'clear:both' },
+    { reg: /^ofys($|_.*)/, to: 'overflow-y: scroll' },
 
     //text-align
     { reg: /^tal($|_.*)/, to: 'text-align:left' },
@@ -59,6 +65,11 @@ const genRules = (unit = 'px') => {
     { reg: /^c([0-9a-fA-F]{3,8})($|_.*)/, to: 'color:#$1' },
     { reg: /^tdn($|_.*)/, to: 'text-decoration:none' },
     { reg: /^tdu($|_.*)/, to: 'text-decoration:underline' },
+    { reg: /^toe($|_.*)/, to: 'text-overflow:ellipsis' },
+    { reg: /^wsn($|_.*)/, to: 'white-space:nowrap' },
+    { reg: /^ls(-?\\d+)($|_.*)/, to: 'letter-spacing: $1' },
+    { reg: /^wwbw($|_.*)/, to: 'word-wrap:break-word' },
+    { reg: /^wbba($|_.*)/, to: 'word-break:break-all' },
 
     // position
     { reg: /^pa($|_.*)/, to: 'position:absolute' },
@@ -95,6 +106,12 @@ const genRules = (unit = 'px') => {
     { reg: /^btrr(\d+)($|_.*)/, to: 'border-top-right-radius:$1' + unit },
     { reg: /^bbrr(\d+)($|_.*)/, to: 'border-bottom-right-radius:$1' + unit },
     { reg: /^bblr(\d+)($|_.*)/, to: 'border-bottom-left-radius:$1' + unit },
+
+    // transform
+    { reg: /^tr(\\d+)($|_.*)/, to: 'transform:rotate($1deg)' },
+
+    // 背景
+    { reg: /^bgsc$/, to: 'background-size: contain'},
 
     // 透明
     { reg: /^o(\d+)($|_.*)/, to: 'opacity:.$1' },
