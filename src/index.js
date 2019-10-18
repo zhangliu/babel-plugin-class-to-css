@@ -13,6 +13,7 @@ const spanPlugin = require('./plugins/span')
 const absolutePlugin = require('./plugins/absolute')
 
 let cssRules
+const ctcReg = /^ctc-(.*)$/
 const plugins = [
   absolutePlugin,
   borderPlugin,
@@ -56,7 +57,13 @@ export default function({types: t }) {
           path.node.isCtcHandle = true // 设置 ctc
 
           // 插件处理, ctc- 是插件处理后的结果，有的话表示处理过了
-          if (names.find(name => /^ctc-.*$/.test(name))) return
+          // if (names.find(name => /^ctc-.*$/.test(name))) return
+          const ctcNames = names.filter(name => ctcReg.test(name))
+          for (const ctcName of ctcNames) {
+            const tmpNames = ctcName.replace(ctcReg, '$1').split('-')
+            names = names.concat(tmpNames)
+          }
+          names = [...(new Set(names))].filter(name => !ctcReg.test(name))
 
           for(const plugin of plugins) {
             const result = plugin.handle(names, path, cssRules, { imgUrl })
