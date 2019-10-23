@@ -1,5 +1,5 @@
 {
-  "version": "1.2.24",
+  "version": "1.2.25",
   "description": "plugin can generate css by class name.",
   "repository": "zhangliu/babel-plugin-class-to-css",
   "name": "@zhangliu/babel-plugin-class-to-css",
@@ -16,7 +16,7 @@
     "build": "babel src -d lib",
     "test": "mocha --compilers js:babel-register",
     "test:watch": "npm run test -- --watch",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run clean && npm i babel-cli && npm run build"
   },
   "keywords": [
     "babel-plugin"
