@@ -111,7 +111,8 @@ const genRules = (unit = 'px') => {
     { reg: /^tr(\\d+)($|_.*)/, to: 'transform:rotate($1deg)' },
 
     // 背景
-    { reg: /^bgsc$/, to: 'background-size: contain'},
+    { reg: /^bgsct$/, to: 'background-size: contain'},
+    { reg: /^bgscv$/, to: 'background-size: cover'},
 
     // 透明
     { reg: /^o(\d+)($|_.*)/, to: 'opacity:.$1' },
