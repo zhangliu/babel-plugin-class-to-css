@@ -46,11 +46,12 @@ const genRules = (unit = 'px') => {
     { reg: /^cb($|_.*)/, to: 'clear:both' },
     { reg: /^ofys($|_.*)/, to: 'overflow-y: scroll' },
 
-    //text-align
+    // align
     { reg: /^tal($|_.*)/, to: 'text-align:left' },
     { reg: /^tar($|_.*)/, to: 'text-align:right' },
     { reg: /^tac($|_.*)/, to: 'text-align:center' },
     { reg: /^tdlt($|_.*)/, to: 'text-decoration:line-through' },
+    { reg: /^vam($|_.*)/, to: 'vertical-align:middle' },
 
     // background
     { reg: /^bgn($|_.*)/, to: 'background:none' },
