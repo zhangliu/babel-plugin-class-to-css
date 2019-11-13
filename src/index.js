@@ -4,8 +4,9 @@ const { dirname, basename } = require('path')
 
 const { getClassNames, setClassName } = require('./utils/className')
 const { genCsses } = require('./utils/css')
+const { parse } = require('./utils/ctcClass')
 const { genRules } = require('./rules')
-const borderPlugin = require('./plugins/border')
+const borderWidthPlugin = require('./plugins/borderWidth')
 const borderRadiusPlugin = require('./plugins/borderRadius')
 const marginPlugin = require('./plugins/margin')
 const paddingPlugin = require('./plugins/padding')
@@ -13,10 +14,9 @@ const spanPlugin = require('./plugins/span')
 const absolutePlugin = require('./plugins/absolute')
 
 let cssRules
-const ctcReg = /^ctc-(.*)$/
 const plugins = [
   absolutePlugin,
-  borderPlugin,
+  borderWidthPlugin,
   borderRadiusPlugin,
   spanPlugin,
   marginPlugin,
@@ -56,14 +56,8 @@ export default function({types: t }) {
           if (path.node.isCtcHandle) return
           path.node.isCtcHandle = true // 设置 ctc
 
-          // 插件处理, ctc- 是插件处理后的结果，有的话表示处理过了
-          // if (names.find(name => /^ctc-.*$/.test(name))) return
-          const ctcNames = names.filter(name => ctcReg.test(name))
-          for (const ctcName of ctcNames) {
-            const tmpNames = ctcName.replace(ctcReg, '$1').split('-')
-            names = names.concat(tmpNames)
-          }
-          names = [...(new Set(names))].filter(name => !ctcReg.test(name))
+          // ctc class 处理
+          names = parse(names)
 
           for(const plugin of plugins) {
             const result = plugin.handle(names, path, cssRules, { imgUrl })

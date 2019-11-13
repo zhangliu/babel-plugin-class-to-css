@@ -8,7 +8,7 @@ class T extends React.Component {
  	render() {
      return (
       <div classtocss className='container m450 bgi-process-png'>
-        <span className="bceee mt10">hello world!</span>
+        <span className="bceee mt10 bw1 bbw2 btw5 br3 btlr3">hello world!</span>
         <span className="m10 mt20">dd</span>
       </div>
      )

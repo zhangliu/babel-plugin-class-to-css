@@ -1,4 +1,5 @@
 const { genValues } = require('../utils/css')
+const { getClassName } = require('../utils/ctcClass')
 
 const handle = (names, path, rules, opts) => {
   if (names.length <= 0) return
@@ -8,7 +9,7 @@ const handle = (names, path, rules, opts) => {
   if (pNames.length <= 1) return
 
   // 合并 class
-  const key = `ctc-${pNames.join('-')}`
+  const key = getClassName(pNames)
   names.push(key)
   const value = genValues(pNames, rules, opts).join(';')
   const csses = [`.${key}{${value}}`]
