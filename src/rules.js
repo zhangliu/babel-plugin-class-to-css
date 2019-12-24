@@ -108,6 +108,7 @@ const genRules = (unit = 'px') => {
     { reg: /^bbrr(\d+)($|_.*)/, to: 'border-bottom-right-radius:$1' + unit },
     { reg: /^bblr(\d+)($|_.*)/, to: 'border-bottom-left-radius:$1' + unit },
     { reg: /^bsbb($|_.*)/, to: 'box-sizing:border-box' },
+    { reg: /^on($|_.*)/, to: 'outline:none' },
 
     // transform
     { reg: /^tr(\\d+)($|_.*)/, to: 'transform:rotate($1deg)' },
