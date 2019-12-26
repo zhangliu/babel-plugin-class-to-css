@@ -43,8 +43,11 @@ export default function({types: t }) {
     },
 
     visitor: {
-      CallExpression(path, { opts: { rules = [], unit = 'px', imgUrl } }) {
+      CallExpression(path, { opts: { rules = [], units = {}, imgUrl } }) {
         if (!this.canGen) return
+
+        const unit = getUnit(path, units)
+
         try {
           if (!isCreateEleCall(path.node)) return
 
@@ -85,6 +88,19 @@ export default function({types: t }) {
       fs.writeFileSync(cssFilename, content)
     }
   };
+}
+
+const getUnit = (path, units) => {
+  const defaultUnit = 'px'
+  try {
+    const filename = path.hub.file.opts.filename
+    const keys = Object.keys(units)
+    const key = keys.find(key => (new RegExp(key)).test(filename))
+    if (!key) return defaultUnit
+    return units[key]
+  } catch(e) {
+    return defaultUnit
+  }
 }
 
 const isCreateEleCall = node => {

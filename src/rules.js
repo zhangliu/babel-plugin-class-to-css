@@ -68,7 +68,7 @@ const genRules = (unit = 'px') => {
     { reg: /^tdu($|_.*)/, to: 'text-decoration:underline' },
     { reg: /^toe($|_.*)/, to: 'text-overflow:ellipsis' },
     { reg: /^wsn($|_.*)/, to: 'white-space:nowrap' },
-    { reg: /^ls(-?\\d+)($|_.*)/, to: 'letter-spacing: $1' },
+    { reg: /^ls(-?\\d+)($|_.*)/, to: 'letter-spacing: $1' + unit },
     { reg: /^wwbw($|_.*)/, to: 'word-wrap:break-word' },
     { reg: /^wbba($|_.*)/, to: 'word-break:break-all' },
 
