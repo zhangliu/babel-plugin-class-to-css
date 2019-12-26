@@ -13,7 +13,6 @@ const paddingPlugin = require('./plugins/padding')
 const spanPlugin = require('./plugins/span')
 const absolutePlugin = require('./plugins/absolute')
 
-let cssRules
 const plugins = [
   absolutePlugin,
   borderWidthPlugin,
@@ -54,7 +53,9 @@ export default function({types: t }) {
           let names = getClassNames(path) || []
           if (names.length <= 0) return
 
-          cssRules = cssRules || rules.map(r => ({reg: new RegExp(r.reg), to: r.to})).concat(genRules(unit))
+          const innerRules = genRules(unit)
+          const outerRules = rules.map(r => ({reg: new RegExp(r.reg), to: r.to}))
+          const allRules = outerRules.concat(innerRules)
 
           if (path.node.isCtcHandle) return
           path.node.isCtcHandle = true // 设置 ctc
@@ -63,14 +64,14 @@ export default function({types: t }) {
           names = parse(names)
 
           for(const plugin of plugins) {
-            const result = plugin.handle(names, path, cssRules, { imgUrl })
+            const result = plugin.handle(names, path, allRules, { imgUrl })
             if (!result) continue
             names = result.names
             this.csses = this.csses.concat(result.csses)
           }
           setClassName(path, names)
 
-          const csses = genCsses(names, cssRules, { imgUrl }).concat(this.csses)
+          const csses = genCsses(names, allRules, { imgUrl }).concat(this.csses)
           this.csses = [...(new Set(csses))]
         } catch(e) {
           console.log(e)
