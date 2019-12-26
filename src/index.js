@@ -12,6 +12,7 @@ const marginPlugin = require('./plugins/margin')
 const paddingPlugin = require('./plugins/padding')
 const spanPlugin = require('./plugins/span')
 const absolutePlugin = require('./plugins/absolute')
+const dotPlugin = require('./plugins/dot')
 
 const plugins = [
   absolutePlugin,
@@ -19,7 +20,8 @@ const plugins = [
   borderRadiusPlugin,
   spanPlugin,
   marginPlugin,
-  paddingPlugin
+  paddingPlugin,
+  dotPlugin
 ]
 
 export default function({types: t }) {

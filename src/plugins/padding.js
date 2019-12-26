@@ -1,17 +1,17 @@
 const { genValues } = require('../utils/css')
-const { getClassName } = require('../utils/ctcClass')
+const { getMergedClassName } = require('../utils/ctcClass')
 
 const handle = (names, path, rules, opts) => {
   if (names.length <= 0) return
 
-  const reg = /^p[trbl]?\d+$/
-  const pNames = names.filter(name => reg.test(name))
-  if (pNames.length <= 1) return
+  const reg = /^p[trbl]?((\d+)|(\.\d+)|(\d+\.\d+))$/
+  const filterNames = names.filter(name => reg.test(name))
+  if (filterNames.length <= 1) return
 
   // 合并 class
-  const key = getClassName(pNames)
+  const key = getMergedClassName(filterNames)
   names.push(key)
-  const value = genValues(pNames, rules, opts).join(';')
+  const value = genValues(filterNames, rules, opts).join(';')
   const csses = [`.${key}{${value}}`]
 
   const newNames = [...(new Set(names))].filter(name => !reg.test(name))

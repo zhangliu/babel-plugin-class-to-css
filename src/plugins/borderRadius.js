@@ -1,5 +1,5 @@
 const { genValues } = require('../utils/css')
-const { getClassName } = require('../utils/ctcClass')
+const { getMergedClassName } = require('../utils/ctcClass')
 
 const handle = (names, path, rules, opts) => {
   if (names.length <= 0) return
@@ -8,7 +8,7 @@ const handle = (names, path, rules, opts) => {
   const bNames = names.filter(name => bReg.test(name))
   if (!bNames.length) return
 
-  const bName = getClassName(bNames)
+  const bName = getMergedClassName(bNames)
   names.push(bName)
 
   const value = genValues(bNames, rules, opts).join(';')

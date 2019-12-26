@@ -1,22 +1,21 @@
 const { genValues } = require('../utils/css')
-const { getClassName } = require('../utils/ctcClass')
+const { getMergedClassName } = require('../utils/ctcClass')
 
 const handle = (names, path, rules, opts) => {
   if (names.length <= 0) return
 
   // 处理border-width
-  const bReg = /^b[trbl]?w\d+$/
-  const bNames = names.filter(name => bReg.test(name))
-  if (!bNames.length) return
+  const reg = /^b[trbl]?w((\d+)|(\.\d+)|(\d+\.\d+))$/
+  const filterNames = names.filter(name => reg.test(name))
+  if (!filterNames.length) return
 
-  const bName = getClassName(bNames)
-  console.log()
-  names.push(bName)
+  const key = getMergedClassName(filterNames)
+  names.push(key)
 
-  const value = genValues(bNames, rules, opts).join(';')
-  const csses = [`.${bName}{${value}}`]
+  const value = genValues(filterNames, rules, opts).join(';')
+  const csses = [`.${key}{${value}}`]
 
-  const newNames = [...(new Set(names))].filter(name => !bReg.test(name))
+  const newNames = [...(new Set(names))].filter(name => !reg.test(name))
 
   return { names: newNames, csses }
 }
