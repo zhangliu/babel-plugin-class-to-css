@@ -1,28 +1,10 @@
 const fs = require('fs')
 const { EOL } = require('os')
 const { dirname, basename } = require('path')
+const nameHandler = require('./utils/nameHandler')
+const cssHandler = require('./utils/cssHandler')
 
-const { getClassNames, setClassName } = require('./utils/className')
-const { genCsses } = require('./utils/css')
-const { parse } = require('./utils/ctcClass')
-const { genRules } = require('./rules')
-const borderWidthPlugin = require('./plugins/borderWidth')
-const borderRadiusPlugin = require('./plugins/borderRadius')
-const marginPlugin = require('./plugins/margin')
-const paddingPlugin = require('./plugins/padding')
-const spanPlugin = require('./plugins/span')
-const absolutePlugin = require('./plugins/absolute')
-const dotPlugin = require('./plugins/dot')
-
-const plugins = [
-  absolutePlugin,
-  borderWidthPlugin,
-  borderRadiusPlugin,
-  spanPlugin,
-  marginPlugin,
-  paddingPlugin,
-  dotPlugin
-]
+const { getNames, setClassName } = require('./utils/className')
 
 export default function({types: t }) {
   return {
@@ -31,6 +13,7 @@ export default function({types: t }) {
       const index = basename(filename).indexOf('.')
       const cssFilename = `${basename(filename).substr(0, index)}.ctc.css`
 
+      // 判断有没有导入 ctc.css 文件
       const body = state.ast.program ? state.ast.program.body || [] : []
       const cssImport = body.find(b => {
         const isTypeOk = b.type === 'ImportDeclaration'
@@ -44,37 +27,34 @@ export default function({types: t }) {
     },
 
     visitor: {
-      CallExpression(path, { opts: { rules = [], units = {}, imgUrl } }) {
+      CallExpression(path, { opts }) {
         if (!this.canGen) return
-
-        const unit = getUnit(path, units)
 
         try {
           if (!isCreateEleCall(path.node)) return
 
-          let names = getClassNames(path) || []
+          let names = getNames(path) || []
           if (names.length <= 0) return
+          
+          // if (path.node.isCtcHandle) return
+          // path.node.isCtcHandle = true // 设置 ctc
 
-          const innerRules = genRules(unit)
-          const outerRules = rules.map(r => ({reg: new RegExp(r.reg), to: r.to}))
-          const allRules = outerRules.concat(innerRules)
+          const newNames = []
+          names = nameHandler.merge(names)
 
-          if (path.node.isCtcHandle) return
-          path.node.isCtcHandle = true // 设置 ctc
+          for (const name of names) {
+            const ctcInfo = nameHandler.parse(name)
 
-          // ctc class 处理
-          names = parse(names)
+            if (!ctcInfo) {
+              newNames.push(name)
+              continue
+            }
 
-          for(const plugin of plugins) {
-            const result = plugin.handle(names, path, allRules, { imgUrl })
-            if (!result) continue
-            names = result.names
-            this.csses = this.csses.concat(result.csses)
+            newNames.push(ctcInfo.name)
+            this.csses.push(cssHandler.getCss(ctcInfo))
           }
-          setClassName(path, names)
 
-          const csses = genCsses(names, allRules, { imgUrl }).concat(this.csses)
-          this.csses = [...(new Set(csses))]
+          setClassName(path, newNames)
         } catch(e) {
           console.log(e)
         }
@@ -87,23 +67,11 @@ export default function({types: t }) {
       const cssFilename = `${dirname(filename)}/${this.cssFilename}`
 
       console.warn('生成css文件：', cssFilename)
+      this.csses = [...(new Set(csses))]
       const content = `/* 自动生成文件，请不要修改 */${EOL}${this.csses.join(EOL)}`
       fs.writeFileSync(cssFilename, content)
     }
   };
-}
-
-const getUnit = (path, units) => {
-  const defaultUnit = 'px'
-  try {
-    const filename = path.hub.file.opts.filename
-    const keys = Object.keys(units)
-    const key = keys.find(key => (new RegExp(key)).test(filename))
-    if (!key) return defaultUnit
-    return units[key]
-  } catch(e) {
-    return defaultUnit
-  }
 }
 
 const isCreateEleCall = node => {

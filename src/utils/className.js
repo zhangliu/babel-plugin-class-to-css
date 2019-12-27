@@ -1,4 +1,4 @@
-const getClassNames = (path) => {
+const getNames = (path) => {
   try {
     const prop = getProp(path)
     if (!prop || !prop.value || !prop.value.value)  return
@@ -16,15 +16,15 @@ const getProp = (path, name = 'className') => {
   return arg.properties.find(prop => prop.key.name === name)
 }
 
-const setClassName = (path, values) => {
+const setClassNames = (path, names) => {
   const prop = getProp(path)
   if (!prop || !prop.value || !prop.value.value)  return
 
-  const uniqValues = [...(new Set(values || []))]
-  prop.value.value = uniqValues.join(' ')
+  const uniqNames = [...(new Set(names || []))]
+  prop.value.value = uniqNames.join(' ')
 }
 
 module.exports = {
-  getClassNames,
-  setClassName
+  getNames,
+  setClassNames
 }
