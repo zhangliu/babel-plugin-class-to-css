@@ -25,7 +25,7 @@ const parse = (names) => {
 
   for (const ctcName of ctcNames) {
     const tmpNames = ctcName.replace(ctcReg, '$1')
-      .replace(/dot/g, '.').split('-')
+      .replace(/dot/g, '.').split('-') // TODO 这块-和负数符号冲突，需要改掉！
     result = result.concat(tmpNames)
   }
   return [...(new Set(result))]
