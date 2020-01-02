@@ -40,7 +40,10 @@ export default function({types: t }) {
           if (path.node.isCtcHandle) return
           path.node.isCtcHandle = true // 设置 ctc
 
-          const rules = genRules(opts.unit) // TODO 需要联合外面的 rules
+          let rules = genRules(opts.unit)
+          const outerRules = (opts.rules || []).map(r => ({reg: new RegExp(r.reg), to: r.to}))
+          rules = outerRules.concat(rules)
+
           const newNames = []
           let ctcInfos = nameHandler.parse(names, rules)
           ctcInfos = nameHandler.merge(ctcInfos)
