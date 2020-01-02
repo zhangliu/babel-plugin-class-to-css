@@ -1,4 +1,4 @@
-// const backgroundImg = require('./converts/backgroundImg')
+const backgroundImg = require('../converts/backgroundImg')
 
 const genRules = (unit = 'px') => {
   return [
@@ -55,7 +55,7 @@ const genRules = (unit = 'px') => {
 
     // background
     { reg: /^bgn$/, to: 'background:none' },
-    // { reg: /^bgi-([_0-9a-zA-Z]+)(-([0-9a-zA-Z]+))?$/, func: backgroundImg },
+    { reg: /^bgi-([_0-9a-zA-Z]+)(-([0-9a-zA-Z]+))?$/, to: backgroundImg },
     { reg: /^bgc([0-9a-fA-F]{3,8})$/, to: 'background-color:#$1' },
     { reg: /^bilg-(\d+)-(\w{3,8})-(\w{3,8})$/, to: 'background-image:linear-gradient($1deg, #$2, #$3)'},
 

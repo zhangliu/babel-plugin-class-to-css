@@ -76,7 +76,7 @@ const merge = (ctcInfos) => {
 const mergeToOne = ctcInfos => {
   return {
     type: 'merged',
-    name: ctcInfos.map(ctcInfo => ctcInfo.name).join('_'),
+    name: 'ctc_' + ctcInfos.map(ctcInfo => ctcInfo.name).join('_'),
     ctcInfos
   }
 }

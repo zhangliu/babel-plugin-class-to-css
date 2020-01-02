@@ -9,7 +9,7 @@ const genCss = (ctcInfo) => {
   if (ctcInfo.type === 'merged') {
     const { name, ctcInfos } = ctcInfo
     const cssValue = ctcInfos.map(genCssValueFromCtcInfo).join(';')
-    return `.ctc_${name}{${cssValue}}`
+    return `.${name}{${cssValue}}`
   }
   return ''
 }
