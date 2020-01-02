@@ -16,7 +16,7 @@ const getProp = (path, name = 'className') => {
   return arg.properties.find(prop => prop.key.name === name)
 }
 
-const setClassNames = (path, names) => {
+const setClassName = (path, names) => {
   const prop = getProp(path)
   if (!prop || !prop.value || !prop.value.value)  return
 
@@ -26,5 +26,5 @@ const setClassNames = (path, names) => {
 
 module.exports = {
   getNames,
-  setClassNames
+  setClassName
 }

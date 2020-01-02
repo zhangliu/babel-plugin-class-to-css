@@ -1,6 +1,6 @@
 {
   "presets": ["react"],
   "plugins": [
-    ["../../../src", {"imgUrl": "//xxx.www.ccc/fff/ee", "units": {"/example/actual": "rem"}}]
+    ["../../../src", {"imgUrl": "//xxx.www.ccc/fff/ee", "unit": "rem"}]
   ]
 }

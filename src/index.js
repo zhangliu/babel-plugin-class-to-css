@@ -3,6 +3,7 @@ const { EOL } = require('os')
 const { dirname, basename } = require('path')
 const nameHandler = require('./utils/nameHandler')
 const cssHandler = require('./utils/cssHandler')
+const { genRules } = require('./utils/rules')
 
 const { getNames, setClassName } = require('./utils/className')
 
@@ -27,7 +28,7 @@ export default function({types: t }) {
     },
 
     visitor: {
-      CallExpression(path, { opts }) {
+      CallExpression(path, { opts = {} }) {
         if (!this.canGen) return
 
         try {
@@ -36,22 +37,17 @@ export default function({types: t }) {
           let names = getNames(path) || []
           if (names.length <= 0) return
           
-          // if (path.node.isCtcHandle) return
-          // path.node.isCtcHandle = true // 设置 ctc
+          if (path.node.isCtcHandle) return
+          path.node.isCtcHandle = true // 设置 ctc
 
+          const rules = genRules(opts.unit) // TODO 需要联合外面的 rules
           const newNames = []
-          names = nameHandler.merge(names)
+          let ctcInfos = nameHandler.parse(names, rules)
+          ctcInfos = nameHandler.merge(ctcInfos)
 
-          for (const name of names) {
-            const ctcInfo = nameHandler.parse(name)
-
-            if (!ctcInfo) {
-              newNames.push(name)
-              continue
-            }
-
+          for (const ctcInfo of ctcInfos) {
             newNames.push(ctcInfo.name)
-            this.csses.push(cssHandler.getCss(ctcInfo))
+            this.csses.push(cssHandler.genCss(ctcInfo))
           }
 
           setClassName(path, newNames)
@@ -67,7 +63,7 @@ export default function({types: t }) {
       const cssFilename = `${dirname(filename)}/${this.cssFilename}`
 
       console.warn('生成css文件：', cssFilename)
-      this.csses = [...(new Set(csses))]
+      this.csses = [...(new Set(this.csses))]
       const content = `/* 自动生成文件，请不要修改 */${EOL}${this.csses.join(EOL)}`
       fs.writeFileSync(cssFilename, content)
     }
