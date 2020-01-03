@@ -14,7 +14,7 @@ const parse = (names, rules) => {
 }
 
 const getCtcInfo = (name, rules) => {
-  const key = rmSuffix(name)
+  const key = getKey(name)
   const rule = rules.find(rule => rule.reg.test(key))
   if (!rule) return { name }
 
@@ -34,27 +34,32 @@ const getCtcInfo = (name, rules) => {
   }
 }
 
-const rmSuffix = name => {
+const getKey = name => {
   let result = rmImportant(name)
   result = rmAfter(result)
   result = rmBefore(result)
   return rmHover(result)
 }
 
-const hasImportant = name => /_i($|_)/.test(name)
-const rmImportant = name => name.replace(/_i$/, '').replace(/_i_/g, '_')
+const hasImportant = name => /!/.test(name)
+const rmImportant = name => name.replace(/!/g, '')
 
-const hasAfter = name => /_a($|_)/.test(name)
-const rmAfter = name => name.replace(/_a$/, '').replace(/_a_/g, '_')
+const hasAfter = name => /:a/.test(name)
+const rmAfter = name => name.replace(/:a/, '')
 
-const hasBefore = name => /_b($|_)/.test(name)
-const rmBefore = name => name.replace(/_b$/, '').replace(/_b_/g, '_')
+const hasBefore = name => /:b/.test(name)
+const rmBefore = name => name.replace(/:b/, '')
 
-const hasHover = name => /_h($|_)/.test(name)
-const rmHover = name => name.replace(/_h$/, '').replace(/_h_/g, '_')
+const hasHover = name => /:h/.test(name)
+const rmHover = name => name.replace(/:h/, '')
 
 const replaceSpecSymbol = (name) => {
-  return name.replace(/\./g, '_dot_').replace(/%/g, '_percent_')
+  return name.replace(/\./g, '_dot_')
+              .replace(/%/g, '_percent_')
+              .replace(/!/g, '_important_')
+              .replace(/:a/g, '_after_')
+              .replace(/:b/g, '_before_')
+              .replace(/:h/g, '_hover_')
 }
 
 const merge = (ctcInfos) => {
@@ -73,18 +78,18 @@ const merge = (ctcInfos) => {
   return result
 }
 
+const canMerged = (ctcInfo, reg) => {
+  if (!reg.test(ctcInfo.key)) return false
+  const hasPseudo = Object.values(ctcInfo.option.pseudo).find(value => !!value)
+  return !hasPseudo
+}
+
 const mergeToOne = ctcInfos => {
   return {
     type: 'merged',
     name: 'ctc_' + ctcInfos.map(ctcInfo => ctcInfo.name).join('_'),
     ctcInfos
   }
-}
-
-const canMerged = (ctcInfo, reg) => {
-  if (!reg.test(ctcInfo.key)) return false
-  const hasPseudo = Object.values(ctcInfo.option.pseudo).find(value => !!value)
-  return !hasPseudo
 }
 
 module.exports = {
