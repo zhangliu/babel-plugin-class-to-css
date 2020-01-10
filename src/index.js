@@ -96,7 +96,8 @@ export default function({types: t }) {
 const getUnit = (path, units) => {
   const defaultUnit = 'px'
   try {
-    const filename = path.hub.file.opts.filename
+    let filename = path.hub.file.opts.filename || ''
+    filename = filename.replace(/\\/g, '/')
     const keys = Object.keys(units)
     const key = keys.find(key => (new RegExp(key)).test(filename))
     if (!key) return defaultUnit
