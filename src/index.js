@@ -40,12 +40,12 @@ export default function({types: t }) {
           if (path.node.isCtcHandle) return
           path.node.isCtcHandle = true // 设置 ctc
 
-          let rules = genRules(opts.unit)
+          let rules = genRules(cssHandler.UNIT_HOLDER)
           const outerRules = (opts.rules || []).map(r => ({reg: new RegExp(r.reg), to: r.to}))
           rules = outerRules.concat(rules)
 
           const newNames = []
-          let ctcInfos = nameHandler.parse(names, rules)
+          let ctcInfos = nameHandler.parse(names, rules, opts.unit || 'px')
           ctcInfos = nameHandler.merge(ctcInfos)
 
           for (const ctcInfo of ctcInfos) {

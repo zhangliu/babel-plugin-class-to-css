@@ -5,15 +5,15 @@ const MERGE_REGS = {
   pReg: /^p[trbl]?((\d+)|(\.\d+)|(\d+\.\d+))$/, // padding
 }
 
-const parse = (names, rules) => {
+const parse = (names, rules, unit) => {
   const ctcInfos = []
   for (const name of names) {
-    ctcInfos.push(getCtcInfo(name, rules))
+    ctcInfos.push(getCtcInfo(name, rules, unit))
   }
   return ctcInfos
 }
 
-const getCtcInfo = (name, rules) => {
+const getCtcInfo = (name, rules, unit) => {
   const key = getKey(name)
   const rule = rules.find(rule => rule.reg.test(key))
   if (!rule) return { name }
@@ -21,10 +21,12 @@ const getCtcInfo = (name, rules) => {
   return {
     type: 'common',
     key,
+    unit,
     name: replaceSpecSymbol(name),
     rule,
     option: {
       hasImportant: hasImportant(name),
+      hasPercent: hasPercent(name),
       pseudo: {
         hasAfter: hasAfter(name),
         hasBefore: hasBefore(name),
@@ -36,6 +38,7 @@ const getCtcInfo = (name, rules) => {
 
 const getKey = name => {
   let result = rmImportant(name)
+  result = rmPercent(result)
   result = rmAfter(result)
   result = rmBefore(result)
   return rmHover(result)
@@ -43,6 +46,9 @@ const getKey = name => {
 
 const hasImportant = name => /!/.test(name)
 const rmImportant = name => name.replace(/!/g, '')
+
+const hasPercent = name => /%/.test(name)
+const rmPercent = name => name.replace(/%/g, '')
 
 const hasAfter = name => /:a/.test(name)
 const rmAfter = name => name.replace(/:a/, '')

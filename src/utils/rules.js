@@ -1,6 +1,6 @@
 const backgroundImg = require('../converts/backgroundImg')
 
-const genRules = (unit = 'px') => {
+const genRules = (unit) => {
   return [
     // display
     { reg: /^db$/, to: 'display:block' },
@@ -76,7 +76,6 @@ const genRules = (unit = 'px') => {
     { reg: /^pa$/, to: 'position:absolute' },
     { reg: /^pr$/, to: 'position:relative' },
     { reg: /^pf$/, to: 'position:fixed' },
-    { reg: /^t(\d+)b$/, to: 'top:$1%' },
     { reg: /^t(-?((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'top:$1' + unit },
     { reg: /^b(-?((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'bottom:$1' + unit },
     { reg: /^l(-?((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'left:$1' + unit },
@@ -84,12 +83,10 @@ const genRules = (unit = 'px') => {
 
     //width and height
     { reg: /^w(((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'width:$1' + unit },
-    { reg: /^w(\d+)b$/, to: 'width:$1%' },
     { reg: /^miw(((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'min-width:$1' + unit },
     { reg: /^maw(((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'max-width:$1' + unit },
 
     { reg: /^h(((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'height:$1' + unit },
-    { reg: /^h(\d+)b$/, to: 'height:$1%' },
     { reg: /^mih(((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'min-height:$1' + unit },
     { reg: /^mah(((\d+)|(\.\d+)|(\d+\.\d+)))$/, to: 'max-height:$1' + unit },
 

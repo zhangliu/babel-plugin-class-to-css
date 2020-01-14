@@ -1,3 +1,6 @@
+
+const UNIT_HOLDER = '_unit_'
+
 const genCss = (ctcInfo) => {
   if (ctcInfo.type === 'common') {
     const cssValue = genCssValueFromCtcInfo(ctcInfo)
@@ -15,15 +18,25 @@ const genCss = (ctcInfo) => {
 }
 
 const genCssValueFromCtcInfo = ctcInfo => {
-  const { key, rule, option: { hasImportant } } = ctcInfo
+  const { key, rule, option: { hasImportant, hasPercent } } = ctcInfo
 
   let cssValue = isFunc(rule.to) ? rule.to(key) : key.replace(rule.reg, rule.to)
-  return addImportant(cssValue, hasImportant)
+  cssValue = handleImportant(cssValue, hasImportant)
+  cssValue = handleUnit(cssValue, ctcInfo.unit, { hasPercent })
+
+  return cssValue
 }
 
-const addImportant = (cssValue, hasImportant) => {
+const handleImportant = (cssValue, hasImportant) => {
   if (!hasImportant) return cssValue
   return `${cssValue.replace(';', '')} !important`
+}
+
+const handleUnit = (cssValue, unit, {hasPercent}) => {
+  const reg = new RegExp(UNIT_HOLDER, 'g')
+
+  if (!hasPercent) return cssValue.replace(reg, unit)
+  return cssValue.replace(reg, '%')
 }
 
 const addPseudo = (cssKey, pseudo) => {
@@ -36,5 +49,6 @@ const addPseudo = (cssKey, pseudo) => {
 const isFunc = func => typeof func === 'function'
 
 module.exports = {
-  genCss
+  genCss,
+  UNIT_HOLDER,
 }

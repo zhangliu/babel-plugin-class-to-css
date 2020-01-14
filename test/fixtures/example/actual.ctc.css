@@ -9,6 +9,7 @@
 .df{display:flex}
 .aic{align-items:center}
 .bgcEEEEE7{background-color:#EEEEE7}
-.br5{border-radius:5rem}
+.br5_percent_{border-radius:5%}
+
 .ctc_ml30_important__mt20_mb25{margin-left:30rem !important;margin-top:20rem;margin-bottom:25rem}
 .ctc_pl15_pr15{padding-left:15rem;padding-right:15rem}
