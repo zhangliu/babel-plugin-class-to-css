@@ -12,7 +12,7 @@ export default function({types: t }) {
       this.convert = new ReactConvert(state);
       if (!this.convert.canConvert) return;
 
-      this.csses = []
+      this.csses = [];
     },
 
     visitor: {
@@ -47,6 +47,7 @@ export default function({types: t }) {
     },
 
     post({ opts: { filename } }) {
+      if (!this.convert) return;
       if (!this.convert.canConvert) return;
 
       const cssFilename = `${dirname(filename)}/${this.convert.cssFilename}`
