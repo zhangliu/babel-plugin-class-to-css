@@ -1,44 +1,30 @@
 const fs = require('fs')
 const { EOL } = require('os')
-const { dirname, basename } = require('path')
+const { dirname } = require('path')
 const nameHandler = require('./utils/nameHandler')
 const cssHandler = require('./utils/cssHandler')
 const { genRules } = require('./utils/rules')
-
-const { getNames, setClassName } = require('./utils/className')
+const ReactConvert = require('./convers/reactConverter')
 
 export default function({types: t }) {
   return {
     pre(state) {
-      const filename = state.opts.filename
-      const index = basename(filename).indexOf('.')
-      const cssFilename = `${basename(filename).substr(0, index)}.ctc.css`
+      this.convert = new ReactConvert(state);
+      if (!this.convert.canConvert) return;
 
-      // 判断有没有导入 ctc.css 文件
-      const body = state.ast.program ? state.ast.program.body || [] : []
-      const cssImport = body.find(b => {
-        const isTypeOk = b.type === 'ImportDeclaration'
-        return isTypeOk && cssFilename === basename(b.source.value)
-      })
-      if (!cssImport) return
-
-      this.canGen = true
-      this.cssFilename = cssFilename
       this.csses = []
     },
 
     visitor: {
       CallExpression(path, { opts = {} }) {
-        if (!this.canGen) return
+        if (!this.convert.canConvert) return;
 
         try {
-          if (!isCreateEleCall(path.node)) return
-
-          let names = getNames(path) || []
-          if (names.length <= 0) return
+          let names = this.convert.getNames(path.node) || [];
+          if (names.length <= 0) return;
           
-          if (path.node.isCtcHandle) return
-          path.node.isCtcHandle = true // 设置 ctc
+          if (path.node.isCtcHandle) return;
+          path.node.isCtcHandle = true;
 
           let rules = genRules(cssHandler.UNIT_HOLDER)
           const outerRules = (opts.rules || []).map(r => ({reg: new RegExp(r.reg), to: r.to}))
@@ -53,7 +39,7 @@ export default function({types: t }) {
             this.csses.push(cssHandler.genCss(ctcInfo))
           }
 
-          setClassName(path, newNames)
+          this.convert.setClass(path.node, newNames)
         } catch(e) {
           console.log(e)
         }
@@ -61,9 +47,9 @@ export default function({types: t }) {
     },
 
     post({ opts: { filename } }) {
-      if (!this.canGen) return
+      if (!this.convert.canConvert) return;
 
-      const cssFilename = `${dirname(filename)}/${this.cssFilename}`
+      const cssFilename = `${dirname(filename)}/${this.convert.cssFilename}`
 
       console.warn('生成css文件：', cssFilename)
       this.csses = [...(new Set(this.csses))]
@@ -71,11 +57,4 @@ export default function({types: t }) {
       fs.writeFileSync(cssFilename, content)
     }
   };
-}
-
-const isCreateEleCall = node => {
-  if (!node || !node.callee) return false
-
-  const {object = {}, property = {}} = node.callee
-  return object.name === 'React' && property.name === 'createElement'
 }

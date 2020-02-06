@@ -1,4 +1,4 @@
-const backgroundImg = require('../converts/backgroundImg')
+const backgroundImg = require('../ruleFuncs/backgroundImg')
 
 const genRules = (unit) => {
   return [
