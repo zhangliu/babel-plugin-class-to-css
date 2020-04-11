@@ -108,7 +108,7 @@ const genRules = (unit) => {
     { reg: /^on$/, to: 'outline:none' },
 
     // transform
-    { reg: /^tr(\\d+)$/, to: 'transform:rotate($1deg)' },
+    { reg: /^tr(\d+)$/, to: 'transform:rotate($1deg)' },
 
     // 背景
     { reg: /^bgsct$/, to: 'background-size: contain'},
