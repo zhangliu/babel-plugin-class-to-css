@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "plugin can generate css by class name.",
   "repository": "zhangliu/babel-plugin-class-to-css",
   "name": "@byted/babel-plugin-class-to-css",
