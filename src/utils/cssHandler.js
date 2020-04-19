@@ -1,13 +1,13 @@
-
-const UNIT_HOLDER = '_unit_'
+const UNIT_HOLDER = '_unit_';
 
 const genCss = (ctcInfo) => {
   if (ctcInfo.type === 'common') {
-    const cssValue = genCssValueFromCtcInfo(ctcInfo)
+    const cssValue = genCssValueFromCtcInfo(ctcInfo);
 
-    const { name, option: { pseudo } } = ctcInfo
-    const cssKey = addPseudo(name, pseudo)
-    return `.${cssKey}{${cssValue}}`
+    const { name, option: { pseudo } } = ctcInfo;
+    const cssKey = addPseudo(name, pseudo);
+
+    return `.${cssKey}{${cssValue}}`;
   }
   if (ctcInfo.type === 'merged') {
     const { name, ctcInfos } = ctcInfo
@@ -18,13 +18,18 @@ const genCss = (ctcInfo) => {
 }
 
 const genCssValueFromCtcInfo = ctcInfo => {
-  const { key, rule, option: { hasImportant, hasPercent } } = ctcInfo
+  const { key, value, rule, option: { hasImportant, hasPercent } } = ctcInfo
 
-  let cssValue = isFunc(rule.to) ? rule.to(key) : key.replace(rule.reg, rule.to)
+  let cssValue = getCssValue(key, value, rule);
   cssValue = handleImportant(cssValue, hasImportant)
   cssValue = handleUnit(cssValue, ctcInfo.unit, { hasPercent })
 
   return cssValue
+}
+
+const getCssValue = (key, value, rule) => {
+  if (isFunc(rule.css)) return rule.css(key, value);
+  return value.replace(/^(.*?)$/g, rule.css);
 }
 
 const handleImportant = (cssValue, hasImportant) => {
