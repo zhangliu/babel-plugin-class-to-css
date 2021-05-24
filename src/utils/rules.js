@@ -14,6 +14,7 @@ const genRules = (unit) => {
 
     // flex
     { key: 'fd', valReg: /c/, css: 'flex-direction:column' },
+    { key: 'fg', valReg: /\d+/, css: 'flex-grow: $1' },
     { key: 'ai', valReg: /^c$/, css: 'align-items:center' },
     { key: 'jc', valReg: /^c$/, css: 'justify-content:center' },
     { key: 'jc', valReg: /^sb$/, css: 'justify-content:space-between' },
